@@ -9,3 +9,6 @@ Developers:
 
 // Work In Progress
 
+NOTE FOR DEVELOPERS:
+
+If you are adding new changes, please create a pull request instead of directly CHANGING code. This allows other members to see your changes before we implement. They will be able to see the changes and compare. If you are adding a new file, you do not need to make a pull request. Deleting files or code that have dependencies (core code), please consult other members. 
