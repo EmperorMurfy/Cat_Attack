@@ -9,24 +9,43 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.net.URL;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 
 
 public class GraphicsPanel extends JPanel implements KeyListener{
 	
 	
-	private Timer t;
+	private Timer timer;
+	
+	private Background background1;			// The background object will display a picture in the background.
+	private Background background2;	
+	
 
 	// method: GraphicsPanel Constructor
 	// description: This 'method' runs when a new instance of this class in instantiated.  It sets default values  
 	// that are necessary to run this project.  You do not need to edit this method.
 	public GraphicsPanel(){
-		setPreferredSize(new Dimension(2560, 1600));
+		background1 = new Background();	// You can set the background variable equal to an instance of any of  
+		background2 = new Background(background1.getImage().getIconWidth(),"background/dollHouse.jpg");
+		
         this.setFocusable(true);			// for keylistener
 		this.addKeyListener(this);
+		
+					
+
+		setPreferredSize(new Dimension(background1.getImage().getIconWidth(),
+				background2.getImage().getIconHeight()));  
+		// This line of code sets the dimension of the panel equal to the dimensions
+		// of the background image.
 			
 	}
 	
@@ -44,23 +63,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		Graphics2D g2 = (Graphics2D) g;
 		
 		// background
-		g2.setColor(Color.gray);
-		g2.fillRect(0, 0, 500, 600);
-		ImageIcon image;
-
-
-        ClassLoader cldr = this.getClass().getClassLoader();
-
-        String imagePath = ""; // whatever picture you use, needs to be in the folder
-
-        URL imageURL = cldr.getResource(imagePath);
-
-        image = new ImageIcon(imageURL);
-
-
-        image.paintIcon(this, g, 0, 0); // draws the image at the x 0 and y 0
-
-    	
+	
+        background1.draw(this, g);
+		background2.draw(this, g);
 		
 	}
 
@@ -85,4 +90,20 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	// This function will play the sound "fileName".
+		public static void playSound(String fileName) {
+			try {
+				File url = new File(fileName);
+				Clip clip = AudioSystem.getClip();
+
+				AudioInputStream ais = AudioSystem.getAudioInputStream(url);
+				clip.open(ais);
+				clip.start();
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
 }
