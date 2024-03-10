@@ -14,10 +14,10 @@ public class Background {
 
 	protected ImageIcon image;
 	protected int scale;
-	protected int x;
+
 	private String map;
 	
-	public Background(int x, String map) {
+	public Background(String map) {
 		ClassLoader cldr = this.getClass().getClassLoader();	// These five lines of code load the background picture.
 		String imagePath =  map;	// Change this line if you want to use a different 
 		URL imageURL = cldr.getResource(imagePath);				// background image.  The image should be saved in the
@@ -30,15 +30,14 @@ public class Background {
 		
 		image = new ImageIcon(scaled);
 		
-		this.x = x;
 	}
 	
 	public Background() {
-		this(0,"background/dollHouse.jpg");
+		this("background/dollHouse.jpg");
 	}
 	
 	public void draw(Component c, Graphics g) {
-		image.paintIcon(c, g, x, 0);
+		image.paintIcon(c, g, 0, 0);
 	}
 	
 	public int getHeight() {
@@ -49,21 +48,7 @@ public class Background {
 		return image.getIconWidth();
 	}
 	
-	public int getX() {
-		return x;
-	}
 	
-	public void move(int spriteX, int direction) {
-		if(direction > 1 && getX() <= image.getIconWidth() && spriteX >= image.getIconWidth() * 2 / 3)
-			x--;
-		
-		if(direction > 1 && getX() < -image.getIconWidth())
-			reset();
-	}
-	
-	public void reset() {
-		x = image.getIconWidth();
-	}
 	
 	public ImageIcon getImage() {
 		return image;
