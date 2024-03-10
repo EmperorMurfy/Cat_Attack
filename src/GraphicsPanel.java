@@ -28,7 +28,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private Timer timer;
 	
 	private Background dollHouse; // dollHouse background object
-	private Item dollHouseGround; 
+	private Item dollHouseGround; // dollHouse 'ground' -  allows sprite to be placed in between the background & item
 
 	
 
@@ -39,7 +39,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			// You can set the background variable equal to an instance of any of  
 		
 		dollHouse = new Background("background/dollHouse.jpg");
-		dollHouseGround = new Item(0, 0, "background/dollHouseAsset.png", 2);
+		dollHouseGround = new Item(0, 0, "background/dollHouseFloor.png", 2);
 		
 		
 				
