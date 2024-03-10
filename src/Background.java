@@ -1,8 +1,7 @@
 // Class: Background
-// Written by: Mr. Swope
-// Date: 1/27/2020
-// Description: This is an abstract class that provides partial implementation for a Background. You can't
-// 				create an instance of this class.
+// Written by: Mason Z.
+// Date: 3/10/2024
+// Description:
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
