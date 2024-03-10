@@ -1,9 +1,8 @@
 // Class: Item
-// Written by: Mr. Swope
-// Date: 1/27/2020
-// Description: This class implements an Item.  This Item will be drawn onto a graphics panel. 
-// 
-// If you modify this class you should add comments that describe how you modified the class.  
+// Written by: Mason Z. 
+// Date: 3/10/2024
+// Description:
+
 
 import java.awt.Component;
 import java.awt.Graphics;
