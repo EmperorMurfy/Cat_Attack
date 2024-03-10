@@ -14,6 +14,7 @@ import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.net.URL;
+import java.util.Scanner;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -23,27 +24,39 @@ import javax.swing.ImageIcon;
 
 public class GraphicsPanel extends JPanel implements KeyListener{
 	
-	
+	// private Scanner sc = new Scanner(System.in); scanner
 	private Timer timer;
 	
-	private Background background1;			// The background object will display a picture in the background.
-	private Background background2;	
+	private Background dollHouse; // dollHouse background object
+	private Item dollHouseGround; 
+
 	
 
 	// method: GraphicsPanel Constructor
 	// description: This 'method' runs when a new instance of this class in instantiated.  It sets default values  
 	// that are necessary to run this project.  You do not need to edit this method.
 	public GraphicsPanel(){
-		background1 = new Background();	// You can set the background variable equal to an instance of any of  
-		background2 = new Background(background1.getImage().getIconWidth(),"background/dollHouse.jpg");
+			// You can set the background variable equal to an instance of any of  
+		
+		dollHouse = new Background("background/dollHouse.jpg");
+		dollHouseGround = new Item(0, 0, "background/dollHouseAsset.png", 2);
+		
+		
+				
+		
 		
         this.setFocusable(true);			// for keylistener
 		this.addKeyListener(this);
 		
+		
+
+		
+		
+		
 					
 
-		setPreferredSize(new Dimension(background1.getImage().getIconWidth(),
-				background2.getImage().getIconHeight()));  
+		setPreferredSize(new Dimension(dollHouse.getImage().getIconWidth(),
+				dollHouse.getImage().getIconHeight()));  
 		// This line of code sets the dimension of the panel equal to the dimensions
 		// of the background image.
 			
@@ -64,9 +77,11 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		
 		// background
 	
-        background1.draw(this, g);
-		background2.draw(this, g);
-		
+
+		 dollHouse.draw(this, g);
+		 dollHouseGround.draw(g2, this);
+	//	dollHouseAsset1.draw(this, g);
+		//dollHouseAsset2.draw(this, g);
 	}
 
 
@@ -105,5 +120,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				ex.printStackTrace();
 			}
 		}
+		
+		
 
 }
