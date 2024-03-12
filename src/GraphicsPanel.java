@@ -27,9 +27,10 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private Timer timer;					// The timer is used to move objects at a consistent time interval.
 	
 	//private boolean loss = false;
-
-	private Background background1;			// The background object will display a picture in the background.
-	private Background background2;			// There has to be two background objects for scrolling.
+	
+	private Background dollHouse; // dollHouse background object
+	private Item dollHouseGround; // dollHouse 'ground' -  allows sprite to be placed in between the background & item
+	
 
 	private Sprite sprite;
 	private Sprite p2;
@@ -56,8 +57,10 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 //	private int boxCounter;
 
 	public GraphicsPanel(){
-		background1 = new Background();	// You can set the background variable equal to an instance of any of  
-		background2 = new Background(background1.getImage().getIconWidth(),"background/dollHouse.jpg");						
+		// main background & floor asset, order from back to front | dollHouse, sprite('s), dollHouseGround
+		dollHouse = new Background("background/dollHouse.jpg");
+		dollHouseGround = new Item(0, 0, "background/dollHouseFloor.png", 2);
+						
 
 	//	item = new Item(500, 200, "images/objects/Bush4.png", 1);  
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
@@ -69,8 +72,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		p2 = new Sprite(900,550);
 		// The Sprite constuctor has two parameter - - the x coordinate and y coordinate
 
-		setPreferredSize(new Dimension(background1.getImage().getIconWidth(),
-				background2.getImage().getIconHeight()));  
+		
+		setPreferredSize(new Dimension(dollHouse.getImage().getIconWidth(),
+				dollHouse.getImage().getIconHeight()));  
 		// This line of code sets the dimension of the panel equal to the dimensions
 		// of the background image.
 
@@ -93,8 +97,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 
-		background1.draw(this, g);
-		background2.draw(this, g);
+		 dollHouse.draw(this, g);
 
 	//	item.draw(g2, this);
 		sprite.draw(g2, this);
@@ -110,6 +113,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		g2.draw(r);
 		Rectangle x = p2.getBounds();
 		g2.draw(x);
+
+		dollHouseGround.draw(g2, this); // should draw it in the correct order (have not checked)
 
 		/*for(int i = 0; i < items.size(); i++) {
 			items.get(i).draw(g2, this);}*/
