@@ -1,7 +1,10 @@
+
+
 // Class: Background
-// Written by: Mason Z.
-// Date: 3/10/2024
-// Description:
+// Written by: Cat-Hadouken Developers
+// Modified Date: 3/10/2024
+// a class called by Graphic Panel in order to paint the background
+
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
