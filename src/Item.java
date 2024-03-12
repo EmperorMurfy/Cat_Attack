@@ -1,7 +1,7 @@
 // Class: Item
-// Written by: Mason Z. 
-// Date: 3/10/2024
-// Description:
+// Written by: Cat-Hadouken Developers
+// Modified Date: 3/10/2024
+// Main Class for Cat Hadoukens
 
 
 import java.awt.Component;
