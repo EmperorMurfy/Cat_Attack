@@ -1,9 +1,10 @@
 // GraphicsMain.java
 
 
-// Written by: Mason Z.
-// Modified Date: June 8th, 2023
-// Main Class for a simple java program with graphics
+// Written by: Cat-Hadouken Developers
+// Modified Date: March 12, 2024
+// Main Class for Cat Hadoukens with Graphics
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
