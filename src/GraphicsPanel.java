@@ -1,5 +1,9 @@
-// Class: GraphicsPanel
+// GraphicsMain.java
 
+
+// Written by: Cat-Hadouken Developers
+// Modified Date: March 12, 2024
+// Main Class for Cat Hadoukens
 
 import java.awt.Color;
 import java.awt.Dimension;
