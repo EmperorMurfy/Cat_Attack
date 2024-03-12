@@ -1,10 +1,5 @@
 // Class: GraphicsPanel
-// Written by: Mr. Swope
-// Date: 1/27/2020
-// Description: This class is the main class for this project.  It extends the Jpanel class and will be drawn on
-// 				on the JPanel in the GraphicsMain class.  
-//
-// Since you will modify this class you should add comments that describe when and how you modified the class.  
+
 
 import java.awt.Color;
 import java.awt.Dimension;
