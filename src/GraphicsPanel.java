@@ -1,4 +1,4 @@
-// GraphicsMain.java
+// GraphicsPanel.java
 
 
 // Written by: Cat-Hadouken Developers
