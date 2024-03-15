@@ -48,6 +48,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	
 	private int wait1=0;
 	private int wait2=0;
+	
+
+	private static playMusic player; // initiates player from playMusic class, to be changed later (testing purposes) 
 	// create a Sprite object
 //	private Item item;						// This declares an Item object. You can make a Item display
 	// pretty much any image that you would like by passing it
@@ -280,11 +283,19 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			playSound("src/sounds/bump.WAV");
 			sprite.die();	
 		} */
+
+			// music player TEST code, to be deleted later 
+		else if (e.getKeyCode() == KeyEvent.VK_R) {
+			player = new playMusic("src/sounds/loop.wav"); // TEST OF THE CLASS, NOT FINALIZED LOCATION
+			player.run(); //initiates player & begins playing at detection of key R
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_E) {
+			player.close();
 		}
 	}
 
 	// This function will play the sound "fileName".
-	public static void playSound(String fileName) {
+	public static void playSound(String fileName) { // behaves similarly to playMusic, but plays once and is a local method
 		try {
 			File url = new File(fileName);
 			Clip clip = AudioSystem.getClip();
