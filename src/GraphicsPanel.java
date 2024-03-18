@@ -292,6 +292,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		else if (e.getKeyCode() == KeyEvent.VK_E) {
 			player.close();
 		}
+		}
 	}
 
 	// This function will play the sound "fileName".
