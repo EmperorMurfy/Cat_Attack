@@ -31,7 +31,7 @@ public class Sprite {
 	protected boolean isDead;			// as the name implies, this boolean is set to true of the character dies :(
 	protected ImageResource imageResource; // This object holds all of the images that will be used to draw the Sprite.
 	
-	protected int health = 100;
+	protected int health = 1000;
 
 
 	// method: Sprite's packed constructor
@@ -110,9 +110,8 @@ public class Sprite {
 		if(!isDead) {
 		if (((x_coordinate > - (2*imageResource.getImageOffset()) && x_direction == -2 || x_direction == -5) ||
 				(x_coordinate + imageResource.getImage().getIconWidth() + imageResource.getImageOffset() < c.getWidth() && (x_direction == 2 || x_direction == 5) ))) {
-			if(!(x_coordinate<-100)){
-			x_coordinate += (x_direction);}
-			else x_coordinate=+1;}
+				x_coordinate += (x_direction);
+			}
 		
 		// jump
 		else if ((y_coordinate > 0 && y_direction == -1) || 

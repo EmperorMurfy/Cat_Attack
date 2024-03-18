@@ -1,9 +1,10 @@
-// GraphicsPanel.java
-
-
-// Written by: Cat-Hadouken Developers
-// Modified Date: March 12, 2024
-// Main Class for Cat Hadoukens
+// Class: GraphicsPanel
+// Written by: Mr. Swope
+// Date: 1/27/2020
+// Description: This class is the main class for this project.  It extends the Jpanel class and will be drawn on
+// 				on the JPanel in the GraphicsMain class.  
+//
+// Since you will modify this class you should add comments that describe when and how you modified the class.  
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,70 +14,69 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class GraphicsPanel extends JPanel implements KeyListener{
 
 	private Timer timer;					// The timer is used to move objects at a consistent time interval.
-	
+
 	//private boolean loss = false;
-	
-	private Background dollHouse; // dollHouse background object
-	private Item dollHouseGround; // dollHouse 'ground' -  allows sprite to be placed in between the background & item
-	
+
+	private Background background1;			// The background object will display a picture in the background.
+	private Background background2;			// There has to be two background objects for scrolling.
 
 	private Sprite sprite;
 	private Sprite p2;
-	
+
 	private int attack1Count=0;
 	private int attack2Count=0;
-	
+
 	private Item p1Attack;
 	private Item p2Attack;
-	
+
 	private boolean p1Block = false;
 	private boolean p2Block= false;
-	
+
 	private int blockCount1=0;
 	private int blockCount2=0;
-	
+
 	private int wait1=0;
 	private int wait2=0;
 	
-
-	private static playMusic player; // initiates player from playMusic class, to be changed later (testing purposes) 
+	private ImageIcon healthBar1;
+	
+	
 	// create a Sprite object
-//	private Item item;						// This declares an Item object. You can make a Item display
+	//	private Item item;						// This declares an Item object. You can make a Item display
 	// pretty much any image that you would like by passing it
 	// the path for the image.
-//	private ArrayList<Item> items;
-//	private int boxCounter;
+	//	private ArrayList<Item> items;
+	//	private int boxCounter;
 
 	public GraphicsPanel(){
-		// main background & floor asset, order from back to front | dollHouse, sprite('s), dollHouseGround
-		dollHouse = new Background("background/dollHouse.jpg");
-		dollHouseGround = new Item(0, 0, "background/dollHouseFloor.png", 2);
-						
+		background1 = new Background();	// You can set the background variable equal to an instance of any of  
+		background2 = new Background(background1.getImage().getIconWidth(),"background/dollHouse.jpg");						
 
-	//	item = new Item(500, 200, "images/objects/Bush4.png", 1);  
+		//	item = new Item(500, 200, "images/objects/Bush4.png", 1);  
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
 		// image smaller, so the bigger the scale, the smaller the image will be.
-	//	items = new ArrayList<Item>();
+		//	items = new ArrayList<Item>();
 
-		sprite = new Sprite(50, 550);
-		p2 = new Sprite(900,550);
+		sprite = new Sprite(1000, 550);
+		p2 = new Sprite(50,550);
 		// The Sprite constuctor has two parameter - - the x coordinate and y coordinate
 
-		
-		setPreferredSize(new Dimension(dollHouse.getImage().getIconWidth(),
-				dollHouse.getImage().getIconHeight()));  
+		setPreferredSize(new Dimension(background1.getImage().getIconWidth(),
+				background2.getImage().getIconHeight()));  
 		// This line of code sets the dimension of the panel equal to the dimensions
 		// of the background image.
 
@@ -85,7 +85,14 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		// timer is started. You can change how frequently this
 		// method is called by changing the first parameter.
 
-	//	boxCounter = 0;
+		//	boxCounter = 0;
+		
+		
+		ClassLoader cldr = this.getClass().getClassLoader();
+		String imagePath = "images/noDie.png";
+		URL imageURL = cldr.getResource(imagePath);
+		healthBar1 = new ImageIcon(imageURL);
+		
 		timer.start();
 		this.setFocusable(true);					     // for keylistener
 		this.addKeyListener(this);
@@ -99,35 +106,54 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 
-		 dollHouse.draw(this, g);
+		background1.draw(this, g);
+		background2.draw(this, g);
 
-	//	item.draw(g2, this);
+		//	item.draw(g2, this);
 		sprite.draw(g2, this);
 		p2.draw(g2, this);
 		
+		g2.drawString("P2",150,280);
+		g2.drawString("P1",950,280);
+		
+		g2.drawString("P2",p2.x_coordinate+200,p2.y_coordinate-20);
+		g2.drawString("P1",sprite.x_coordinate+200,sprite.y_coordinate-20);
+		
+		g2.setColor(Color.RED);
+		healthBar1.paintIcon(this,g,100,300);
+		g2.fillRect(100, 300,(int)p2.getHealth()/3,50);
+		healthBar1.paintIcon(this,g,900,300);
+		g2.fillRect(900, 300,(int)sprite.getHealth()/3,50);
+
 		if(p2Attack !=null) {
-		p2Attack.draw(g2, this);}
+			p2Attack.draw(g2, this);}
 		if(p1Attack !=null) {
 			p1Attack.draw(g2, this);}
 
-		g2.setColor(Color.RED);
+		if(p1Block) {
+			g2.setColor(Color.BLUE);
+		}
+		else g2.setColor(Color.RED);
 		Rectangle r = sprite.getBounds();
 		g2.draw(r);
+		if(p2Block) {
+			g2.setColor(Color.BLUE);}
+		else g2.setColor(Color.RED);
 		Rectangle x = p2.getBounds();
 		g2.draw(x);
 
-		dollHouseGround.draw(g2, this); // should draw it in the correct order (have not checked)
-
 		/*for(int i = 0; i < items.size(); i++) {
 			items.get(i).draw(g2, this);}*/
-		
+
 		if(sprite.isDead) {
+			g2.setColor(Color.BLACK);
 			g2.drawString("P2 Won", 450, 50);
 		}
 		if(p2.isDead) {
+			g2.setColor(Color.BLACK);
 			g2.drawString("P1 Won", 450, 50);
 		}
-		
+
 
 	}
 
@@ -141,57 +167,59 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		p2.move(this);
 
 
-	//	boxCounter++;
-	//	if(boxCounter % 200 == 0)
-	//		items.add(new Item(background1.getImage().getIconWidth() -100, 
-	//				(int)(Math.random() * background1.getImage().getIconHeight()), "images/objects/Bush4.png", 1));
+		//	boxCounter++;
+		//	if(boxCounter % 200 == 0)
+		//		items.add(new Item(background1.getImage().getIconWidth() -100, 
+		//				(int)(Math.random() * background1.getImage().getIconHeight()), "images/objects/Bush4.png", 1));
 
 		// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
 		// item, the item will get smaller. 
-	/*	if(sprite.collision(item) && sprite.getY() < item.getY()) {
+		/*	if(sprite.collision(item) && sprite.getY() < item.getY()) {
 			System.out.println("stop");
 			sprite.stop_Vertical();
 		} */
-		
-		
-		
+
+
+
 		/*	for(int i = 0; i < items.size(); i++)
 			items.get(i).move(this);
-		
+
 		for(Item c: items) {
 			if(sprite.collision(c)) {
 				sprite.die();
 			}
 		}
-		
+
 		for(int i = items.size()-1;i>=0;i--) {
 			if(items.get(i).getX()<10) {
 				items.remove(i);
 			}
 		} 
-		
+
 		if(sprite.isDead) {
 			for(int i = items.size()-1;i>=0;i--) {
 				items.remove(i);
 			}
 		} */
 		if(!p1Block) {
-		
-		if(p2Attack!=null&&sprite.collision(p2Attack)) {
-			sprite.setHealth(sprite.getHealth()-1);
-		}
+
+			if(p2Attack!=null&&sprite.collision(p2Attack)) {
+				sprite.setHealth(sprite.getHealth()-2);
+				System.out.println(sprite.getHealth()+"p1");
+			}
 		}
 		else if(p2Attack!=null) {
-			System.out.println("damge block");
+			System.out.println("damge blomk");
 		}
 		if(!p2Block) {
-		if(p1Attack!=null&&p2.collision(p1Attack)) {
-			p2.setHealth(p2.getHealth()-1);
-		}
-		
+			if(p1Attack!=null&&p2.collision(p1Attack)) {
+				p2.setHealth(p2.getHealth()-2);
+				System.out.println(p2.getHealth()+"p2");
+			}
+
 		}
 		else if(p1Attack!=null) {
-			System.out.println("damge block");
+			System.out.println("damge blomk");
 		}
 		if(sprite.getHealth()<=0) {
 			sprite.die();
@@ -199,9 +227,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		if(p2.getHealth()<=0) {
 			p2.die();
 		}
-		
+
 		this.repaint();
-		
+
 		if(attack2Count==10) {
 			p2Attack = null;
 			attack2Count=0;
@@ -216,7 +244,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		else {
 			attack1Count++;
 		}
-		
+
 		if(wait1!=0) {
 			wait1--;
 		}
@@ -225,24 +253,24 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 		if(p1Block) {
 			blockCount1++;
-			if(blockCount1==100) {
+			if(blockCount1==300) {
 				p1Block=false;
 				wait1=500;
-				System.out.println("block off");
+				blockCount1=0;
 			}
 		}
 		if(p2Block) {
 			blockCount2++;
-			if(blockCount2==100) {
+			if(blockCount2==300) {
 				p2Block=false;
 				wait2=500;
-				System.out.println("block off");
+				blockCount2=0;
 			}
 		}
-		
-		
-		
-	
+
+
+
+
 	}
 
 	// method: keyPressed()
@@ -253,50 +281,45 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(!sprite.isDead&&!p2.isDead) {
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-			sprite.walkRight();
-		else if(e.getKeyCode() == KeyEvent.VK_LEFT)
-			sprite.walkLeft();
-	//	else if(e.getKeyCode() == KeyEvent.VK_SHIFT)
-	//		sprite.run();
-		else if(e.getKeyCode() == KeyEvent.VK_UP)
-			sprite.jump();
-		else if(e.getKeyCode() == KeyEvent.VK_D)
-			p2.walkRight();
-		else if(e.getKeyCode() == KeyEvent.VK_A)
-			p2.walkLeft();
-		else if(e.getKeyCode() == KeyEvent.VK_W)
-			p2.jump();
-		else if(e.getKeyCode()== KeyEvent.VK_S)
-			p2Attack = new Item(p2.x_coordinate+20, p2.y_coordinate, "images/objects/signArrow.png", 1);
-		else if(e.getKeyCode()== KeyEvent.VK_DOWN)
-			p1Attack = new Item(sprite.x_coordinate+240, sprite.y_coordinate, "images/objects/signArrow.png", 1);
-		else if(e.getKeyCode()==KeyEvent.VK_SHIFT&&wait1==0) {
-			p1Block=true;
-			System.out.println("block on");
-		}
-		else if(e.getKeyCode()==KeyEvent.VK_TAB&&wait2==0) {
-			p2Block=true;
-			System.out.println("block on");
-		}
-	/*	else if(e.getKeyCode() == KeyEvent.VK_D) {
+			if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+				sprite.walkRight();
+			else if(e.getKeyCode() == KeyEvent.VK_LEFT)
+				sprite.walkLeft();
+			//	else if(e.getKeyCode() == KeyEvent.VK_SHIFT)
+			//		sprite.run();
+			else if(e.getKeyCode() == KeyEvent.VK_UP)
+				sprite.jump();
+			else if(e.getKeyCode() == KeyEvent.VK_D)
+				p2.walkRight();
+			else if(e.getKeyCode() == KeyEvent.VK_A)
+				p2.walkLeft();
+			else if(e.getKeyCode() == KeyEvent.VK_W)
+				p2.jump();
+			else if(e.getKeyCode()== KeyEvent.VK_S)
+				if(p2.x_direction<0) {
+					p2Attack = new Item(p2.x_coordinate, p2.y_coordinate, "images/objects/signArrow.png", 1);}
+				else p2Attack = new Item(p2.x_coordinate+250, p2.y_coordinate, "images/objects/signArrow.png", 1);
+			else if(e.getKeyCode()== KeyEvent.VK_DOWN)
+				if(sprite.x_direction<0) {
+					p1Attack = new Item(sprite.x_coordinate, sprite.y_coordinate, "images/objects/signArrow.png", 1);}
+				else p1Attack = new Item(sprite.x_coordinate+250, sprite.y_coordinate, "images/objects/signArrow.png", 1);
+			else if(e.getKeyCode()==KeyEvent.VK_SHIFT&&wait1==0) {
+				p1Block=true;
+				System.out.println("block on");
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_Q&&wait2==0) {
+				p2Block=true;
+				System.out.println("block on");
+			}
+			/*	else if(e.getKeyCode() == KeyEvent.VK_D) {
 			playSound("src/sounds/bump.WAV");
 			sprite.die();	
 		} */
-
-			// music player TEST code, to be deleted later 
-		else if (e.getKeyCode() == KeyEvent.VK_R) {
-			player = new playMusic("src/sounds/loop.wav"); // TEST OF THE CLASS, NOT FINALIZED LOCATION
-			player.run(); //initiates player & begins playing at detection of key R
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_E) {
-			player.close();
-		}
 		}
 	}
 
 	// This function will play the sound "fileName".
-	public static void playSound(String fileName) { // behaves similarly to playMusic, but plays once and is a local method
+	public static void playSound(String fileName) {
 		try {
 			File url = new File(fileName);
 			Clip clip = AudioSystem.getClip();
@@ -332,22 +355,20 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT)
 			sprite.idle();
-		else if(e.getKeyCode() ==  KeyEvent.VK_SPACE)
-			sprite.slowDown();
 		
+
 		if(e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_A)
 			p2.idle();
-		else if(e.getKeyCode() ==  KeyEvent.VK_SPACE)
-			p2.slowDown(); 
-		
-		if(e.getKeyCode()==KeyEvent.VK_SHIFT) {
+		 
+
+	/*	if(e.getKeyCode()==KeyEvent.VK_SHIFT) {
 			p1Block=false;
 			System.out.println("block off");
 		}
-		if(e.getKeyCode()==KeyEvent.VK_TAB) {
-			p1Block=false;
+		if(e.getKeyCode()==KeyEvent.VK_Q) {
+			p2Block=false;
 			System.out.println("block off");
-		}
+		} */
 
 	}
 

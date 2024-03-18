@@ -1,8 +1,9 @@
 // Class: Item
-// Written by: Cat-Hadouken Developers
-// Modified Date: 3/10/2024
-// Main Class for Cat Hadoukens
-
+// Written by: Mr. Swope
+// Date: 1/27/2020
+// Description: This class implements an Item.  This Item will be drawn onto a graphics panel. 
+// 
+// If you modify this class you should add comments that describe how you modified the class.  
 
 import java.awt.Component;
 import java.awt.Graphics;
@@ -56,7 +57,7 @@ public class Item{
 		this.x_coordinate = x_coordinate;						// Initial coordinates for the Item.
 		this.y_coordinate = y_coordinate; 
 
-		x_direction = 1;
+		x_direction = -2;
 		y_direction = 0;
 		
 		ClassLoader cldr = this.getClass().getClassLoader();	// These lines of code load the picture.
