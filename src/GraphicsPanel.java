@@ -51,7 +51,6 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private int wait1=0;
 	private int wait2=0;
 	
-	private ImageIcon healthBar1;
 	
 	
 	// create a Sprite object
@@ -71,8 +70,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		// image smaller, so the bigger the scale, the smaller the image will be.
 		//	items = new ArrayList<Item>();
 
-		sprite = new Sprite(1000, 550);
-		p2 = new Sprite(50,550);
+		sprite = new Sprite(1000, 550,100,1,1);
+		p2 = new Sprite(50,550,100,1,1);
 		// The Sprite constuctor has two parameter - - the x coordinate and y coordinate
 
 		setPreferredSize(new Dimension(background1.getImage().getIconWidth(),
@@ -87,11 +86,6 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 		//	boxCounter = 0;
 		
-		
-		ClassLoader cldr = this.getClass().getClassLoader();
-		String imagePath = "images/noDie.png";
-		URL imageURL = cldr.getResource(imagePath);
-		healthBar1 = new ImageIcon(imageURL);
 		
 		timer.start();
 		this.setFocusable(true);					     // for keylistener
@@ -120,10 +114,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		g2.drawString("P1",sprite.x_coordinate+200,sprite.y_coordinate-20);
 		
 		g2.setColor(Color.RED);
-		healthBar1.paintIcon(this,g,100,300);
-		g2.fillRect(100, 300,(int)p2.getHealth()/3,50);
-		healthBar1.paintIcon(this,g,900,300);
-		g2.fillRect(900, 300,(int)sprite.getHealth()/3,50);
+		g2.fillRect(100, 300,(int)p2.getHealth()*3,50);
+		g2.fillRect(900, 300,(int)sprite.getHealth()*3,50);
 
 		if(p2Attack !=null) {
 			p2Attack.draw(g2, this);}
@@ -204,7 +196,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		if(!p1Block) {
 
 			if(p2Attack!=null&&sprite.collision(p2Attack)) {
-				sprite.setHealth(sprite.getHealth()-2);
+				sprite.setHealth(sprite.getHealth()-p2.damage);
 				System.out.println(sprite.getHealth()+"p1");
 			}
 		}
@@ -213,7 +205,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 		if(!p2Block) {
 			if(p1Attack!=null&&p2.collision(p1Attack)) {
-				p2.setHealth(p2.getHealth()-2);
+				p2.setHealth(p2.getHealth()-sprite.damage);
 				System.out.println(p2.getHealth()+"p2");
 			}
 
@@ -310,6 +302,24 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			else if(e.getKeyCode()==KeyEvent.VK_Q&&wait2==0) {
 				p2Block=true;
 				System.out.println("block on");
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_1) {
+				p2 = new Sprite(50,550,50,2,3);
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_2) {
+				p2 = new Sprite(50,550,150,.5,2);
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_3) {
+				p2 = new Sprite(50,550,100,1,2);
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_8) {
+				sprite = new Sprite(1000, 550,50,2,3);
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_9) {
+				sprite = new Sprite(1000, 550,150,.5,2);
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_0) {
+				sprite = new Sprite(1000, 550,100,1,2);
 			}
 			/*	else if(e.getKeyCode() == KeyEvent.VK_D) {
 			playSound("src/sounds/bump.WAV");
