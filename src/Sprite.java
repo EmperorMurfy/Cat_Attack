@@ -32,7 +32,7 @@ public class Sprite {
 	protected ImageResource imageResource; // This object holds all of the images that will be used to draw the Sprite.
 	
 	protected int health;
-	protected int speed;
+	protected double speed;
 	protected int damage;
 	
 
@@ -40,7 +40,7 @@ public class Sprite {
 	// description: Initialize a new Sprite object.
 	// parameters: x_coordinate - the initial x-coordinate for Sprite.
 	//			   y_coordinate - the initial y-coordinate for Sprite.
-	public Sprite(int x_coordinate, int y_coordinate,int health, int speed, int damage){
+	public Sprite(int x_coordinate, int y_coordinate,int health, double speed, int damage){
 
 		this.x_coordinate = x_coordinate;		// Initial coordinates for the Sprite.
 		this.y_coordinate = y_coordinate; 
@@ -116,7 +116,7 @@ public class Sprite {
 		if(!isDead) {
 		if (((x_coordinate > - (2*imageResource.getImageOffset()) && x_direction == -2 || x_direction == -5) ||
 				(x_coordinate + imageResource.getImage().getIconWidth() + imageResource.getImageOffset() < c.getWidth() && (x_direction == 2 || x_direction == 5) ))) {
-				x_coordinate += (x_direction)+speed;
+				x_coordinate += (x_direction)*speed;
 			}
 		
 		// jump
@@ -144,15 +144,9 @@ public class Sprite {
 	// actual movements will occur when the the object's move method is called.
 	public void walkRight() {
 		x_direction = 2;
-		if(speed<=0) {
-			speed=speed*-1;
-		}
 	}
 	public void walkLeft() {
 		x_direction = -2;
-		if(speed>=0) {
-			speed=speed*-1;
-		}
 	}
 	public void run() {
 		x_direction = (x_direction < 0) ? -5 : 5;
