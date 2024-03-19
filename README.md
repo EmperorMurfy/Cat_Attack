@@ -1,9 +1,10 @@
 # Cat Hadoukens! 
 Cat Hadoukens is a game still in the works. Developed as apart of the AP Computer Science's Collaboration Project. 
+main is main repository, may not be stable or up to date, but is intended to be the repository for releases
 
 Developers:
-* Mason Z.
-* SimonCarterNickerson
+* Mason Z. - check mason repository for progress
+* SimonCarterNickerson - check simon repository for progress
 * 12Egg
 * s021777
 
