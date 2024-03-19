@@ -291,10 +291,18 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				if(p2.x_direction<0) {
 					p2Attack = new Item(p2.x_coordinate, p2.y_coordinate, "images/objects/signArrow.png", 1);}
 				else p2Attack = new Item(p2.x_coordinate+250, p2.y_coordinate, "images/objects/signArrow.png", 1);
+			else if(e.getKeyCode()== KeyEvent.VK_E)
+				if(p2.x_direction<0) {
+					p2Attack = new Item(p2.x_coordinate, p2.y_coordinate-100, "images/objects/signArrow.png", 1);}
+				else p2Attack = new Item(p2.x_coordinate+250, p2.y_coordinate-100, "images/objects/signArrow.png", 1);
 			else if(e.getKeyCode()== KeyEvent.VK_DOWN)
 				if(sprite.x_direction<0) {
 					p1Attack = new Item(sprite.x_coordinate, sprite.y_coordinate, "images/objects/signArrow.png", 1);}
 				else p1Attack = new Item(sprite.x_coordinate+250, sprite.y_coordinate, "images/objects/signArrow.png", 1);
+			else if(e.getKeyCode()== KeyEvent.VK_COMMA)
+				if(sprite.x_direction<0) {
+					p1Attack = new Item(sprite.x_coordinate, sprite.y_coordinate-100, "images/objects/signArrow.png", 1);}
+				else p1Attack = new Item(sprite.x_coordinate+250, sprite.y_coordinate-100, "images/objects/signArrow.png", 1);
 			else if(e.getKeyCode()==KeyEvent.VK_SHIFT&&wait1==0) {
 				p1Block=true;
 				System.out.println("block on");
