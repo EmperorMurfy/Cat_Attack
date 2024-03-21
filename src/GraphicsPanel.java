@@ -23,7 +23,7 @@ import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
+//54-61, 207-235, 245-273 ,341-398 (replace previus keybinds), 405-409
 public class GraphicsPanel extends JPanel implements KeyListener{
 
 	private Timer timer;					// The timer is used to move objects at a consistent time interval.
@@ -51,6 +51,14 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private int wait1=0;
 	private int wait2=0;
 	
+	private ArrayList<Character> p1Combo = new ArrayList<>();
+	private ArrayList<Character> p2Combo = new ArrayList<>();
+	
+	private String player1Combo ="";
+	private String player2Combo ="";
+	
+	private boolean play1ComboP =true;
+	private boolean play2ComboP =true;
 	
 	
 	// create a Sprite object
@@ -196,8 +204,37 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		if(!p1Block) {
 
 			if(p2Attack!=null&&sprite.collision(p2Attack)) {
+				if(p2Combo.size()>=4) {
+					for(int i =p2Combo.size()-4;i<p2Combo.size();i++) {
+						player2Combo += p2Combo.get(i);
+					}
+					if(play2ComboP&&player2Combo.equals("wwws")) {
+						sprite.health=(int)sprite.health/2;
+						play2ComboP =false;
+					}
+					if(play2ComboP&&player2Combo.equals("ddds")) {
+						sprite.x_coordinate+=200;
+						play2ComboP =false;
+					}
+					if(play2ComboP&&player2Combo.equals("aaas")) {
+						sprite.x_coordinate-=200;
+						play2ComboP =false;
+					}
+					if(play2ComboP&&player2Combo.equals("dsds")) {
+						if(sprite.health<50)
+							sprite.health=0;
+						play2ComboP =false;
+					}
+					if(play2ComboP&&player2Combo.equals("asas")) {
+						if(sprite.health<50)
+						sprite.health=0;
+						play2ComboP =false;
+					}
+				}
+				player2Combo="";
+				if(play2ComboP) {
 				sprite.setHealth(sprite.getHealth()-p2.damage);
-				System.out.println(sprite.getHealth()+"p1");
+				System.out.println(sprite.getHealth()+"p1");}
 			}
 		}
 		else if(p2Attack!=null) {
@@ -205,8 +242,37 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 		if(!p2Block) {
 			if(p1Attack!=null&&p2.collision(p1Attack)) {
+				if(p1Combo.size()>=4) {
+					for(int i =p1Combo.size()-4;i<p1Combo.size();i++) {
+						player1Combo += p1Combo.get(i);
+					}
+					if(play1ComboP&&player1Combo.equals("wwws")) {
+						p2.health=(int)p2.health/2;
+						play1ComboP =false;
+					}
+					if(play1ComboP&&player1Combo.equals("aaas")) {
+						p2.x_coordinate-=200;
+						play1ComboP =false;
+					}
+					if(play1ComboP&&player1Combo.equals("ddds")) {
+						p2.x_coordinate+=200;
+						play1ComboP =false;
+					}
+					if(play1ComboP&&player1Combo.equals("asas")) {
+						if(p2.health<50)
+						p2.health=0;
+						play1ComboP =false;
+					}
+					if(play1ComboP&&player1Combo.equals("dsds")) {
+						if(p2.health<50)
+						p2.health=0;
+						play1ComboP =false;
+					}
+				}
+				player1Combo="";
+				if(play1ComboP) {
 				p2.setHealth(p2.getHealth()-sprite.damage);
-				System.out.println(p2.getHealth()+"p2");
+				System.out.println(p2.getHealth()+"p2");}
 			}
 
 		}
@@ -273,36 +339,38 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(!sprite.isDead&&!p2.isDead) {
-			if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				sprite.walkRight();
-			else if(e.getKeyCode() == KeyEvent.VK_LEFT)
+				p1Combo.add('d');}
+			else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
 				sprite.walkLeft();
+				p1Combo.add('a');}
 			//	else if(e.getKeyCode() == KeyEvent.VK_SHIFT)
 			//		sprite.run();
-			else if(e.getKeyCode() == KeyEvent.VK_UP)
+			else if(e.getKeyCode() == KeyEvent.VK_UP) {
 				sprite.jump();
-			else if(e.getKeyCode() == KeyEvent.VK_D)
+				p1Combo.add('w');}
+			else if(e.getKeyCode() == KeyEvent.VK_D) {
 				p2.walkRight();
-			else if(e.getKeyCode() == KeyEvent.VK_A)
+				p2Combo.add('d');}
+			else if(e.getKeyCode() == KeyEvent.VK_A) {
 				p2.walkLeft();
-			else if(e.getKeyCode() == KeyEvent.VK_W)
+				p2Combo.add('a');}
+			else if(e.getKeyCode() == KeyEvent.VK_W) {
 				p2.jump();
-			else if(e.getKeyCode()== KeyEvent.VK_S)
+				p2Combo.add('w');}
+			else if(e.getKeyCode()== KeyEvent.VK_S) {
 				if(p2.x_direction<0) {
 					p2Attack = new Item(p2.x_coordinate, p2.y_coordinate, "images/objects/signArrow.png", 1);}
 				else p2Attack = new Item(p2.x_coordinate+250, p2.y_coordinate, "images/objects/signArrow.png", 1);
-			else if(e.getKeyCode()== KeyEvent.VK_E)
-				if(p2.x_direction<0) {
-					p2Attack = new Item(p2.x_coordinate, p2.y_coordinate-100, "images/objects/signArrow.png", 1);}
-				else p2Attack = new Item(p2.x_coordinate+250, p2.y_coordinate-100, "images/objects/signArrow.png", 1);
-			else if(e.getKeyCode()== KeyEvent.VK_DOWN)
+				p2Combo.add('s');
+				play2ComboP =true;}
+			else if(e.getKeyCode()== KeyEvent.VK_DOWN) {
 				if(sprite.x_direction<0) {
 					p1Attack = new Item(sprite.x_coordinate, sprite.y_coordinate, "images/objects/signArrow.png", 1);}
 				else p1Attack = new Item(sprite.x_coordinate+250, sprite.y_coordinate, "images/objects/signArrow.png", 1);
-			else if(e.getKeyCode()== KeyEvent.VK_COMMA)
-				if(sprite.x_direction<0) {
-					p1Attack = new Item(sprite.x_coordinate, sprite.y_coordinate-100, "images/objects/signArrow.png", 1);}
-				else p1Attack = new Item(sprite.x_coordinate+250, sprite.y_coordinate-100, "images/objects/signArrow.png", 1);
+				p1Combo.add('s');
+				play1ComboP =true;}
 			else if(e.getKeyCode()==KeyEvent.VK_SHIFT&&wait1==0) {
 				p1Block=true;
 				System.out.println("block on");
@@ -312,27 +380,32 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				System.out.println("block on");
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_1) {
-				p2 = new Sprite(50,550,50,2,3);
+				p2 = new Sprite(50,550,50,2,2);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_2) {
-				p2 = new Sprite(50,550,150,.5,2);
+				p2 = new Sprite(50,550,200,.5,1);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_3) {
-				p2 = new Sprite(50,550,100,1,2);
+				p2 = new Sprite(50,550,100,1,1);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_8) {
-				sprite = new Sprite(1000, 550,50,2,3);
+				sprite = new Sprite(1000, 550,50,2,2);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_9) {
-				sprite = new Sprite(1000, 550,150,.5,2);
+				sprite = new Sprite(1000, 550,200,.5,1);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_0) {
-				sprite = new Sprite(1000, 550,100,1,2);
+				sprite = new Sprite(1000, 550,100,1,1);
 			}
 			/*	else if(e.getKeyCode() == KeyEvent.VK_D) {
 			playSound("src/sounds/bump.WAV");
 			sprite.die();	
 		} */
+		}
+		else if(e.getKeyCode()==KeyEvent.VK_SPACE) {
+			sprite = new Sprite(1000, 550,100,1,1);
+			p2 = new Sprite(50,550,100,1,1);
+			
 		}
 	}
 
