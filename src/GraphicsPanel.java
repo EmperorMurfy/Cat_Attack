@@ -39,8 +39,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private int attack1Count=0;
 	private int attack2Count=0;
 
-	private Item p1Attack;
-	private Item p2Attack;
+	private Rectangle p1Attack;
+	private Rectangle p2Attack;
 
 	private boolean p1Block = false;
 	private boolean p2Block= false;
@@ -59,6 +59,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	
 	private boolean play1ComboP =true;
 	private boolean play2ComboP =true;
+	
 	
 	
 	// create a Sprite object
@@ -126,9 +127,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		g2.fillRect(900, 300,(int)sprite.getHealth()*3,50);
 
 		if(p2Attack !=null) {
-			p2Attack.draw(g2, this);}
+			g2.drawRect(p2Attack.x, p2Attack.y, p2Attack.width, p2Attack.height);}
 		if(p1Attack !=null) {
-			p1Attack.draw(g2, this);}
+			g2.drawRect(p1Attack.x, p1Attack.y, p1Attack.width, p1Attack.height);}
 
 		if(p1Block) {
 			g2.setColor(Color.BLUE);
@@ -156,6 +157,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 
 	}
+	
 
 	// method:clock
 	// description: This method is called by the clocklistener every 5 milliseconds.  You should update the coordinates
@@ -203,7 +205,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		} */
 		if(!p1Block) {
 
-			if(p2Attack!=null&&sprite.collision(p2Attack)) {
+			if(p2Attack!=null&&sprite.getBounds().intersects(p2Attack)) {
 				if(p2Combo.size()>=4) {
 					for(int i =p2Combo.size()-4;i<p2Combo.size();i++) {
 						player2Combo += p2Combo.get(i);
@@ -241,7 +243,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			System.out.println("damge blomk");
 		}
 		if(!p2Block) {
-			if(p1Attack!=null&&p2.collision(p1Attack)) {
+			if(p1Attack!=null&&p2.getBounds().intersects(p1Attack)) {
 				if(p1Combo.size()>=4) {
 					for(int i =p1Combo.size()-4;i<p1Combo.size();i++) {
 						player1Combo += p1Combo.get(i);
@@ -361,14 +363,15 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				p2Combo.add('w');}
 			else if(e.getKeyCode()== KeyEvent.VK_S) {
 				if(p2.x_direction<0) {
-					p2Attack = new Item(p2.x_coordinate, p2.y_coordinate, "images/objects/signArrow.png", 1);}
-				else p2Attack = new Item(p2.x_coordinate+250, p2.y_coordinate, "images/objects/signArrow.png", 1);
+					p2Attack = new Rectangle(p2.x_coordinate-20, p2.y_coordinate, 100, 140);}
+				else { p2Attack = new Rectangle(p2.x_coordinate+260, p2.y_coordinate, 100, 140);}
 				p2Combo.add('s');
-				play2ComboP =true;}
+				play2ComboP =true;
+				}	
 			else if(e.getKeyCode()== KeyEvent.VK_DOWN) {
 				if(sprite.x_direction<0) {
-					p1Attack = new Item(sprite.x_coordinate, sprite.y_coordinate, "images/objects/signArrow.png", 1);}
-				else p1Attack = new Item(sprite.x_coordinate+250, sprite.y_coordinate, "images/objects/signArrow.png", 1);
+					p1Attack = new Rectangle(sprite.x_coordinate-20, sprite.y_coordinate, 100, 140);}
+				else p1Attack = new Rectangle(sprite.x_coordinate+260, sprite.y_coordinate, 100, 140);
 				p1Combo.add('s');
 				play1ComboP =true;}
 			else if(e.getKeyCode()==KeyEvent.VK_SHIFT&&wait1==0) {
