@@ -27,7 +27,10 @@ public class Sprite {
 
 	protected int jumpCounter;			// jumping animation takes several frames. This counter is used to keep track
 	// of this process. If the Sprite isn't jumping this should be set to -1.
-
+	
+	protected int shieldCounter;
+	
+	
 	protected boolean isDead;			// as the name implies, this boolean is set to true of the character dies :(
 	protected ImageResource imageResource; // This object holds all of the images that will be used to draw the Sprite.
 	
@@ -57,6 +60,7 @@ public class Sprite {
 
 		imageResource = new ImageResource(filePath, 2, 80); // imageResources: filePath is src/sprite.skinwalker but that would be sprite/skinwalker/, scale int
 		jumpCounter = -1;
+		shieldCounter = -1;
 
 	}
 
@@ -138,7 +142,7 @@ public class Sprite {
 			jumpCounter = -1;
 		}
 
-		imageResource.updateImage(x_direction + y_direction, jumpCounter >= 0, isDead);
+		imageResource.updateImage(x_direction + y_direction, jumpCounter >= 0, isDead, shieldCounter >= 0);
 	}
 	}
 
@@ -160,6 +164,10 @@ public class Sprite {
 	}
 	public void idle() {
 		x_direction = (x_direction < 0) ? -1 : 1;
+	}
+	
+	public void shield() {
+		shieldCounter = shieldCounter * -1;
 	}
 
 	public void jump() {

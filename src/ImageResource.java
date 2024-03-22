@@ -8,6 +8,7 @@ public class ImageResource {
 	private ImageIcon image;			// The ImageIcon will be used to hold the Character's png.
 	private int imageCount;
 	private int jumpCount;
+	private int shieldCount;
 	private int imageMax;
 	private int imageOffset;
 	
@@ -21,14 +22,41 @@ public class ImageResource {
 	private ImageIcon[] runningImages;
 	private ImageIcon[] jumpingImages;
 	
+	// test
+	private ImageIcon[] idleImages; // idling 
+	private ImageIcon[] punchImages; // punch
+	private ImageIcon[] shieldImages; // shield
+	private ImageIcon[] damageImages; // damage
+	private ImageIcon[] deadImages; // dead
+	
+	
 	public ImageResource(String imagePath, int imageMax, int imageOffset) {
 		runningImages = new ImageIcon[imageMax];
 		jumpingImages = new ImageIcon[imageMax];
+		
+		//test values 
+		idleImages = new ImageIcon[imageMax];
+		punchImages = new ImageIcon[imageMax];
+		shieldImages = new ImageIcon[imageMax];
+		damageImages = new ImageIcon[imageMax];
+		deadImages = new ImageIcon[imageMax];
+				
+				
+			
 		imageCount = 0;
 		jumpCount = 0;
+		shieldCount = 0;
 		
 		loadImages((imagePath + "Run ("), runningImages); // changed from run -> Run
 		loadImages((imagePath + "Jump ("), jumpingImages); // changed from jump -> Jump 
+		
+		// test values
+		loadImages((imagePath + "Idle ("), idleImages);
+		loadImages((imagePath + "Punch ("), punchImages);
+		loadImages((imagePath + "Shield ("), shieldImages);
+		loadImages((imagePath + "Damage ("), damageImages);
+		loadImages((imagePath + "Dead ("), deadImages);
+		
 		image = runningImages[imageCount];
 		this.imageMax = imageMax;
 		this.imageOffset = imageOffset;
@@ -51,7 +79,7 @@ public class ImageResource {
 		}
 	}
 
-	public void updateImage(int x_direction, boolean jumping, boolean isDead) {
+	public void updateImage(int x_direction, boolean jumping, boolean isDead, boolean shield) {
 
 		imageRefreshCounter++;
 
@@ -64,15 +92,18 @@ public class ImageResource {
 		}
 
 		if(isDead) {
-			image = runningImages[0];
+			image = deadImages[0];
 		}
 		else if(jumping) {
 			jumpCount = (jumpCount < (imageMax * 6)-1) ? jumpCount+1 : 0;
-			image = jumpingImages[jumpCount/6];
+			image = jumpingImages[0];
+		}else if(shield) {
+			shieldCount = (shieldCount < (imageMax*6)-1) ? shieldCount+1 :0;
+			image = shieldImages[imageCount];
 		}
 		// idle 
 		else if(Math.abs(x_direction) == 1){
-			image = runningImages[0];
+			image = idleImages[imageCount];
 		}
 		// running or walking
 		else {

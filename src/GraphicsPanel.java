@@ -30,15 +30,17 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 	//private boolean loss = false;
 
-	// private Background background1;			// The background object will display a picture in the background.
-	// private Background background2;			// There has to be two background objects for scrolling.
-	
+
 	private Background dollHouse; // dollHouse background object
 	private Item dollHouseGround; // dollHouse 'ground' -  allows sprite to be placed in between the background & item
 
+	private Background victorySkinWalker; // victory screen - skinWalker
+	private Background victoryKatze; // victory screen - Katze
+	
+	private playMusic player;
 
 	private Sprite skinWalker;
-	private Sprite p2;
+	private Sprite katze; // p2 replaced as katze
 
 	private int attack1Count=0;
 	private int attack2Count=0;
@@ -55,6 +57,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private int wait1=0;
 	private int wait2=0;
 	
+	private int victoryMusicChecker = 0;
 	
 	
 	// create a skinWalker object
@@ -65,10 +68,17 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	//	private int boxCounter;
 
 	public GraphicsPanel(){
-		// background1 = new Background();	// You can set the background variable equal to an instance of any of  
-		// background2 = new Background(background1.getImage().getIconWidth(),"background/dollHouse.jpg");						
-		dollHouse = new Background("background/dollHouse.jpg");
+		// music
+		player = new playMusic("src/sounds/loop.wav"); 
+		player.run();
+		
+		// background info				
+		dollHouse = new Background("background/dollHouse.jpg", 2);
 		dollHouseGround = new Item(0, 0, "background/dollHouseFloor.png", 2);
+		
+		// victory screen info
+		victorySkinWalker = new Background("background/victorySkinWalker.png", 2);
+		victoryKatze = new Background("background/victoryKatze.png", 2);
 
 		//	item = new Item(500, 200, "images/objects/Bush4.png", 1);  
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
@@ -77,16 +87,12 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		//	items = new ArrayList<Item>();
 
 		skinWalker = new Sprite("sprite/skinwalker/", 1000, 368,100,1,1); // name = new Sprite(x value, y value, health, speed, attack);
-		p2 = new Sprite("sprite/skinwalker/", 50,368,100,1,1);
-
-		// The skinWalker constuctor has two parameter - - the x coordinate and y coordinate
+		katze = new Sprite("sprite/katze/", 50,368,100,1,1); // change file path
 
 
 		setPreferredSize(new Dimension(dollHouse.getImage().getIconWidth(),
-				dollHouse.getImage().getIconHeight()));  
+				dollHouse.getImage().getIconHeight()));  // dimensions of game
 		
-		// This line of code sets the dimension of the panel equal to the dimensions
-		// of the background image.
 
 		timer = new Timer(5, new ClockListener(this));   // This object will call the ClockListener's
 		// action performed method every 5 milliseconds once the 
@@ -113,19 +119,23 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		//background2.draw(this, g);
 
 		//	item.draw(g2, this);
-		skinWalker.draw(g2, this);
-		p2.draw(g2, this);
 		
+		// draw characters
+		skinWalker.draw(g2, this);
+		katze.draw(g2, this);
+	
 		g2.drawString("P2",150,280);
 		g2.drawString("P1",950,280);
 		
-		g2.drawString("P2",p2.x_coordinate+200,p2.y_coordinate-20);
+		g2.drawString("P2",katze.x_coordinate+200,katze.y_coordinate-20); // player 1 and player two identifier
 		g2.drawString("P1",skinWalker.x_coordinate+200,skinWalker.y_coordinate-20);
 		
+		// health bar
 		g2.setColor(Color.RED);
-		g2.fillRect(100, 300,(int)p2.getHealth()*3,50);
+		g2.fillRect(100, 300,(int)katze.getHealth()*3,50);
 		g2.fillRect(900, 300,(int)skinWalker.getHealth()*3,50);
 
+		// attack conditions
 		if(p2Attack !=null) {
 			p2Attack.draw(g2, this);}
 		if(p1Attack !=null) {
@@ -140,21 +150,37 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		if(p2Block) {
 			g2.setColor(Color.BLUE);}
 		else g2.setColor(Color.RED);
-		Rectangle x = p2.getBounds();
+		Rectangle x = katze.getBounds();
 		g2.draw(x);
 
 		/*for(int i = 0; i < items.size(); i++) {
 			items.get(i).draw(g2, this);}*/
-
+		dollHouseGround.draw(g2, this);
+		
+		
 		if(skinWalker.isDead) {
 			g2.setColor(Color.BLACK);
-			g2.drawString("P2 Won", 450, 50);
+			g2.drawString("Katze has Won!", 450, 50);
+			
+			
+			victoryKatze.draw(this, g2);
+			player.close();
+			if (victoryMusicChecker == 45) { // victory sound play delay lines up with player reaction speed
+				playSound("src/sounds/victoryKatze.wav");
+			}
+			victoryMusicChecker++;
+
 		}
-		if(p2.isDead) {
+		if(katze.isDead) {
 			g2.setColor(Color.BLACK);
-			g2.drawString("P1 Won", 450, 50);
+			g2.drawString("Skinwalker has Won!", 450, 50);
+			victorySkinWalker.draw(this, g2);
+			player.close();
+			if (victoryMusicChecker == 45) {
+				playSound("src/sounds/victoryKatze.wav");
+			}
+			victoryMusicChecker++;
 		}
-		dollHouseGround.draw(g2, this);
 
 
 
@@ -167,7 +193,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public void clock(){
 		// You can move any of your objects by calling their move methods.
 		skinWalker.move(this);
-		p2.move(this);
+		katze.move(this);
 
 
 		//	boxCounter++;
@@ -207,7 +233,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		if(!p1Block) {
 
 			if(p2Attack!=null&&skinWalker.collision(p2Attack)) {
-				skinWalker.setHealth(skinWalker.getHealth()-p2.damage);
+				skinWalker.setHealth(skinWalker.getHealth()-katze.damage);
 				System.out.println(skinWalker.getHealth()+"p1");
 			}
 		}
@@ -215,9 +241,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			System.out.println("damge blomk");
 		}
 		if(!p2Block) {
-			if(p1Attack!=null&&p2.collision(p1Attack)) {
-				p2.setHealth(p2.getHealth()-skinWalker.damage);
-				System.out.println(p2.getHealth()+"p2");
+			if(p1Attack!=null&&katze.collision(p1Attack)) {
+				katze.setHealth(katze.getHealth()-skinWalker.damage);
+				System.out.println(katze.getHealth()+"p2");
 			}
 
 		}
@@ -227,8 +253,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		if(skinWalker.getHealth()<=0) {
 			skinWalker.die();
 		}
-		if(p2.getHealth()<=0) {
-			p2.die();
+		if(katze.getHealth()<=0) {
+			katze.die();
 		}
 
 		this.repaint();
@@ -283,7 +309,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	// parameters: KeyEvent e
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(!skinWalker.isDead&&!p2.isDead) {
+		if(!skinWalker.isDead&&!katze.isDead) {
 			if(e.getKeyCode() == KeyEvent.VK_RIGHT)
 				skinWalker.walkRight();
 			else if(e.getKeyCode() == KeyEvent.VK_LEFT)
@@ -293,44 +319,48 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			else if(e.getKeyCode() == KeyEvent.VK_UP)
 				skinWalker.jump();
 			else if(e.getKeyCode() == KeyEvent.VK_D)
-				p2.walkRight();
+				katze.walkRight();
 			else if(e.getKeyCode() == KeyEvent.VK_A)
-				p2.walkLeft();
+				katze.walkLeft();
 			else if(e.getKeyCode() == KeyEvent.VK_W)
-				p2.jump();
-			else if(e.getKeyCode()== KeyEvent.VK_S)
-				if(p2.x_direction<0) {
-					p2Attack = new Item(p2.x_coordinate, p2.y_coordinate, "images/objects/signArrow.png", 1);} // images
-				else p2Attack = new Item(p2.x_coordinate+250, p2.y_coordinate, "images/objects/signArrow.png", 1); // images 
+				katze.jump();
+			else if(e.getKeyCode()== KeyEvent.VK_S) // attack
+				if(katze.x_direction<0) {
+					p2Attack = new Item(katze.x_coordinate, katze.y_coordinate, "images/objects/signArrow.png", 1);} // images
+				else p2Attack = new Item(katze.x_coordinate+450, katze.y_coordinate, "images/objects/signArrow.png", 1); // images 
+			
+			
 			else if(e.getKeyCode()== KeyEvent.VK_DOWN)
 				if(skinWalker.x_direction<0) {
 					p1Attack = new Item(skinWalker.x_coordinate, skinWalker.y_coordinate, "images/objects/signArrow.png", 1);} // images
-				else p1Attack = new Item(skinWalker.x_coordinate+250, skinWalker.y_coordinate, "images/objects/signArrow.png", 1); // images
+				else p1Attack = new Item(skinWalker.x_coordinate+450, skinWalker.y_coordinate, "images/objects/signArrow.png", 1); // images
 			else if(e.getKeyCode()==KeyEvent.VK_SHIFT&&wait1==0) {
 				p1Block=true;
+				skinWalker.shield(); // shield doesn't come off visually
 				System.out.println("block on");
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_Q&&wait2==0) {
 				p2Block=true;
+				katze.shield(); 
 				System.out.println("block on");
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_1) {
-				p2 = new Sprite("sprite/skinwalker/", 50,550,50,2,3);
+				katze = new Sprite("sprite/skinwalker/", 50,368,50,2,3);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_2) {
-				p2 = new Sprite("sprite/skinwalker/", 50,550,150,.5,2);
+				katze = new Sprite("sprite/skinwalker/", 50,368,150,.5,2);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_3) {
-				p2 = new Sprite("sprite/skinwalker/", 50,550,100,1,2);
+				katze = new Sprite("sprite/skinwalker/", 50,368,100,1,2);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_8) {
-				skinWalker = new Sprite("sprite/skinwalker/", 1000, 550,50,2,3);
+				skinWalker = new Sprite("sprite/skinwalker/", 1000,368,50,2,3);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_9) {
-				skinWalker = new Sprite("sprite/skinwalker/", 1000, 550,150,.5,2);
+				skinWalker = new Sprite("sprite/skinwalker/", 1000,368,150,.5,2);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_0) {
-				skinWalker = new Sprite("sprite/skinwalker/", 1000, 550,100,1,2);
+				skinWalker = new Sprite("sprite/skinwalker/", 1000,368,100,1,2);
 			}
 			/*	else if(e.getKeyCode() == KeyEvent.VK_D) {
 			playSound("src/sounds/bump.WAV");
@@ -379,7 +409,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		
 
 		if(e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_A)
-			p2.idle();
+			katze.idle();
 		 
 
 	/*	if(e.getKeyCode()==KeyEvent.VK_SHIFT) {

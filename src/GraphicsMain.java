@@ -9,19 +9,18 @@ import javazoom.jl.player.*;
 
 
 public class GraphicsMain extends JFrame{
-	private static playMusic player;
 	
 
 	public static void main(String[] args) {
 		System.out.println("print");
-		GraphicsPanel.playSound("src/sounds/loop.wav");
+		
 
 
 
 		GraphicsMain window = new GraphicsMain();
 		JPanel p = new JPanel();
 		p.add(new GraphicsPanel());  
-		window.setTitle("LM Video Game Design");
+		window.setTitle("Cat Attack!");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setContentPane(p);
 		window.pack();
