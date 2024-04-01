@@ -16,7 +16,7 @@ public class ImageResource {
 	private int imageRefreshCounter = 0;
 	private static final int IMAGE_REFRESH_MAX = 3;
 
-	private static final int SCALE = 6; // scale, as number increases size decrease 
+	private static final int SCALE = 4;
 
 	private ImageIcon[] runningImages;
 	private ImageIcon[] jumpingImages;
@@ -27,8 +27,8 @@ public class ImageResource {
 		imageCount = 0;
 		jumpCount = 0;
 		
-		loadImages((imagePath + "Run ("), runningImages); // changed from run -> Run
-		loadImages((imagePath + "Jump ("), jumpingImages); // changed from jump -> Jump 
+		loadImages((imagePath + "run ("), runningImages);
+		loadImages((imagePath + "jump ("), jumpingImages);
 		image = runningImages[imageCount];
 		this.imageMax = imageMax;
 		this.imageOffset = imageOffset;

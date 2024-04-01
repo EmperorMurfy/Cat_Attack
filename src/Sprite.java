@@ -31,31 +31,23 @@ public class Sprite {
 	protected boolean isDead;			// as the name implies, this boolean is set to true of the character dies :(
 	protected ImageResource imageResource; // This object holds all of the images that will be used to draw the Sprite.
 	
-	protected int health;
-	protected double speed;
-	protected int damage;
-	
-	protected String filePath;
-	
+	protected int health = 100;
+
 
 	// method: Sprite's packed constructor
 	// description: Initialize a new Sprite object.
 	// parameters: x_coordinate - the initial x-coordinate for Sprite.
 	//			   y_coordinate - the initial y-coordinate for Sprite.
-	public Sprite(String filePath, int x_coordinate, int y_coordinate,int health, double speed, int damage){
-		this.filePath = filePath; // added filePath
+	public Sprite(int x_coordinate, int y_coordinate){
+
 		this.x_coordinate = x_coordinate;		// Initial coordinates for the Sprite.
 		this.y_coordinate = y_coordinate; 
-		
-		this.damage=damage;
-		this.speed=speed;
-		this.health=health;
 
 		x_direction = 1;						// Initial directions - 1 for x means that the Sprite is facing to
 		// the right but no moving.
 		y_direction = 0;						// 0 for y direction means it's not moving vertically.
 
-		imageResource = new ImageResource(filePath, 2, 80); // imageResources: filePath is src/sprite.skinwalker but that would be sprite/skinwalker/, scale int
+		imageResource = new ImageResource("images/robot/", 8, 80);
 		jumpCounter = -1;
 
 	}
@@ -78,11 +70,11 @@ public class Sprite {
 	public Rectangle getBounds(){
 		if(x_direction < 0)
 			return new Rectangle(x_coordinate + imageResource.getImageOffset(), y_coordinate, 
-					imageResource.getImage().getIconWidth() - imageResource.getImageOffset(), 
+					imageResource.getImage().getIconWidth() - imageResource.getImageOffset()/2, 
 					imageResource.getImage().getIconHeight());
 		else
-			return new Rectangle(x_coordinate + 2 * imageResource.getImageOffset() + 120, y_coordinate, // fixed bounds 
-					imageResource.getImage().getIconWidth() - imageResource.getImageOffset(), 
+			return new Rectangle(x_coordinate+2* imageResource.getImageOffset(), y_coordinate, 
+					imageResource.getImage().getIconWidth() - imageResource.getImageOffset()/2, 
 					imageResource.getImage().getIconHeight());
 	}
 
@@ -118,8 +110,9 @@ public class Sprite {
 		if(!isDead) {
 		if (((x_coordinate > - (2*imageResource.getImageOffset()) && x_direction == -2 || x_direction == -5) ||
 				(x_coordinate + imageResource.getImage().getIconWidth() + imageResource.getImageOffset() < c.getWidth() && (x_direction == 2 || x_direction == 5) ))) {
-				x_coordinate += (x_direction)*speed;
-			}
+			if(!(x_coordinate<-100)){
+			x_coordinate += (x_direction);}
+			else x_coordinate=+1;}
 		
 		// jump
 		else if ((y_coordinate > 0 && y_direction == -1) || 

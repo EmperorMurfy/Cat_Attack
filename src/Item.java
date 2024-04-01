@@ -29,7 +29,7 @@ public class Item{
 
 	// method: Default constructor - see packed constructors comments for a description of parameters.
 	public Item(){
-		this(200, 300, "images/forest/objects/.png", 2);
+		this(200, 300, "images/forest/objects/Tree_2.png", 2);
 	}
 
 	// method: Item constructor
@@ -57,7 +57,7 @@ public class Item{
 		this.x_coordinate = x_coordinate;						// Initial coordinates for the Item.
 		this.y_coordinate = y_coordinate; 
 
-		x_direction = -2;
+		x_direction = 1;
 		y_direction = 0;
 		
 		ClassLoader cldr = this.getClass().getClassLoader();	// These lines of code load the picture.
@@ -94,6 +94,10 @@ public class Item{
 	public Rectangle getBounds(){
 		return new Rectangle(x_coordinate, y_coordinate, image.getIconWidth(), 
 				image.getIconHeight());
+	}
+	public boolean containsPoint(int x, int y) {
+		return getBounds().contains(x,y);
+		
 	}
 
 	// method: collision

@@ -1,8 +1,10 @@
+
+
 // Class: Background
-// Written by: Mr. Swope
-// Date: 1/27/2020
-// Description: This is an abstract class that provides partial implementation for a Background. You can't
-// 				create an instance of this class.
+// Written by: Cat-Hadouken Developers
+// Modified Date: 3/10/2024
+// a class called by Graphic Panel in order to paint the background
+
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -17,11 +19,11 @@ public class Background {
 
 	private String map;
 	
-	public Background(String map, int scale) {
+	public Background(String map) {
 		ClassLoader cldr = this.getClass().getClassLoader();	// These five lines of code load the background picture.
 		String imagePath =  map;	// Change this line if you want to use a different 
 		URL imageURL = cldr.getResource(imagePath);				// background image.  The image should be saved in the
-		this.scale = scale;
+		scale = 2;
 		
 		image = new ImageIcon(imageURL);
 		
@@ -33,7 +35,7 @@ public class Background {
 	}
 	
 	public Background() {
-		this("background/dollHouse.jpg", 2);
+		this("background/dollHouse.jpg");
 	}
 	
 	public void draw(Component c, Graphics g) {
