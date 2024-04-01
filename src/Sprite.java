@@ -29,6 +29,8 @@ public class Sprite {
 	// of this process. If the Sprite isn't jumping this should be set to -1.
 	
 	protected int shieldCounter;
+	protected int attackCounter;
+	protected int damageCounter;
 	
 	
 	protected boolean isDead;			// as the name implies, this boolean is set to true of the character dies :(
@@ -61,6 +63,8 @@ public class Sprite {
 		imageResource = new ImageResource(filePath, 2, 80); // imageResources: filePath is src/sprite.skinwalker but that would be sprite/skinwalker/, scale int
 		jumpCounter = -1;
 		shieldCounter = -1;
+		attackCounter = -1;
+		damageCounter = -1;
 
 	}
 
@@ -130,19 +134,19 @@ public class Sprite {
 				(y_coordinate + imageResource.getImage().getIconWidth() < c.getHeight()+75 && y_direction == 1 ))
 			y_coordinate += (y_direction);
 
-		if(jumpCounter >= 0 && jumpCounter < 200) {
+		if(jumpCounter >= 0 && jumpCounter < 300) {
 			jumpCounter+=5;
 			y_coordinate-=5;
 		}
-		else if(jumpCounter >= 200 && jumpCounter < 400){
-			jumpCounter+=1;
-			y_coordinate+=1;
+		else if(jumpCounter >= 300 && jumpCounter < 600){
+			jumpCounter+=4;
+			y_coordinate+=4;
 		}
 		else {
 			jumpCounter = -1;
 		}
 
-		imageResource.updateImage(x_direction + y_direction, jumpCounter >= 0, isDead, shieldCounter >= 0);
+		imageResource.updateImage(x_direction + y_direction, jumpCounter >= 0, isDead, shieldCounter >= 0, attackCounter >=0, damageCounter >=0);
 	}
 	}
 
@@ -168,6 +172,14 @@ public class Sprite {
 	
 	public void shield() {
 		shieldCounter = shieldCounter * -1;
+	}
+	
+	public void attack() {
+		attackCounter = attackCounter * -1;
+	}
+	
+	public void damage() {
+		damageCounter = damageCounter * -1;
 	}
 
 	public void jump() {

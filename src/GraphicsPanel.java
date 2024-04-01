@@ -29,6 +29,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private Timer timer;					// The timer is used to move objects at a consistent time interval.
 
 	//private boolean loss = false;
+	
 
 
 	private Background dollHouse; // dollHouse background object
@@ -42,6 +43,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private Sprite skinWalker;
 	private Sprite katze; // p2 replaced as katze
 
+	private int attack1loop = 1;
+	private int attack2loop = 1;
+	
 	private int attack1Count=0;
 	private int attack2Count=0;
 
@@ -181,6 +185,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			}
 			victoryMusicChecker++;
 		}
+		
+	
 
 
 
@@ -230,11 +236,15 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				items.remove(i);
 			}
 		} */
+		
+	
 		if(!p1Block) {
-
 			if(p2Attack!=null&&skinWalker.collision(p2Attack)) {
 				skinWalker.setHealth(skinWalker.getHealth()-katze.damage);
+				skinWalker.damage();
 				System.out.println(skinWalker.getHealth()+"p1");
+				
+				
 			}
 		}
 		else if(p2Attack!=null) {
@@ -243,7 +253,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		if(!p2Block) {
 			if(p1Attack!=null&&katze.collision(p1Attack)) {
 				katze.setHealth(katze.getHealth()-skinWalker.damage);
+				katze.damage();
 				System.out.println(katze.getHealth()+"p2");
+				
 			}
 
 		}
@@ -258,6 +270,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 
 		this.repaint();
+		
 
 		if(attack2Count==10) {
 			p2Attack = null;
@@ -284,6 +297,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			blockCount1++;
 			if(blockCount1==300) {
 				p1Block=false;
+				skinWalker.shield();
 				wait1=500;
 				blockCount1=0;
 			}
@@ -292,6 +306,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			blockCount2++;
 			if(blockCount2==300) {
 				p2Block=false;
+				katze.shield();
 				wait2=500;
 				blockCount2=0;
 			}
@@ -324,16 +339,23 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				katze.walkLeft();
 			else if(e.getKeyCode() == KeyEvent.VK_W)
 				katze.jump();
-			else if(e.getKeyCode()== KeyEvent.VK_S) // attack
+			else if(e.getKeyCode()== KeyEvent.VK_S) {// attack
 				if(katze.x_direction<0) {
-					p2Attack = new Item(katze.x_coordinate, katze.y_coordinate, "images/objects/signArrow.png", 1);} // images
-				else p2Attack = new Item(katze.x_coordinate+450, katze.y_coordinate, "images/objects/signArrow.png", 1); // images 
+					p2Attack = new Item(katze.x_coordinate, katze.y_coordinate, "images/objects/signArrow.png", 1);
+					} // images
+				else { 
+					p2Attack = new Item(katze.x_coordinate+350, katze.y_coordinate, "images/objects/signArrow.png", 1);
+					} // images 
+				katze.attack(); 
+			}
+	
 			
-			
-			else if(e.getKeyCode()== KeyEvent.VK_DOWN)
+			else if(e.getKeyCode()== KeyEvent.VK_DOWN) {
 				if(skinWalker.x_direction<0) {
 					p1Attack = new Item(skinWalker.x_coordinate, skinWalker.y_coordinate, "images/objects/signArrow.png", 1);} // images
 				else p1Attack = new Item(skinWalker.x_coordinate+450, skinWalker.y_coordinate, "images/objects/signArrow.png", 1); // images
+				skinWalker.attack(); 
+			}
 			else if(e.getKeyCode()==KeyEvent.VK_SHIFT&&wait1==0) {
 				p1Block=true;
 				skinWalker.shield(); // shield doesn't come off visually
@@ -404,13 +426,31 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT)
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT) {
 			skinWalker.idle();
-		
+			if (katze.attackCounter == 1) {
+				katze.attack();
+			}
+		}
 
-		if(e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_A)
+		if(e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_A) {
 			katze.idle();
+			if (skinWalker.attackCounter == 1) {
+				skinWalker.attack();
+			}
+		}
+		
+		
+		if(e.getKeyCode() == KeyEvent.VK_S)  
+			katze.attack(); 
+		
+		if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+			skinWalker.attack();
+		}
+			
 		 
+		
+		
 
 	/*	if(e.getKeyCode()==KeyEvent.VK_SHIFT) {
 			p1Block=false;
@@ -422,5 +462,10 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		} */
 
 	}
+	
+
+
+
+
 
 }
