@@ -1,3 +1,8 @@
+// Class: playMusic
+// Written by: Cat Attack Developers
+// Last Updated: May 19, 2024
+// Description: Mainly intended for background music purposes, plays on loop 
+
 import java.io.File;
 
 import javax.sound.sampled.AudioInputStream;

@@ -1,9 +1,7 @@
 // Class: Sprite
-// Written by: Mr. Swope
-// Date: 1/27/2020
-// Description: This class implements an Item.  This Item will be drawn onto a graphics panel. 
-// 
-// If you modify this class you should add comments that describe when and how you modified the class.  
+// Written by: Cat Attack Developers
+// Date: Apr 2, 2024
+// Description: This class implements a sprite
 
 import java.awt.Component;
 import java.awt.Graphics;
@@ -13,40 +11,35 @@ import java.awt.Rectangle;
 public class Sprite {
 
 	// movement variables
-	protected int x_coordinate;			// These ints will be used for drawing the png on the graphics panel.
-	protected int y_coordinate;			// When the Sprite's move method is called you should update one or both
-	// of these instance variables.  (0,0) is the top left hand corner of the
-	// panel.  x increases as you move to the right, y increases as you move down.
+	protected int x_coordinate;			
+	protected int y_coordinate;			
 
-	protected int x_direction;			// -5 running left, -2 walking left, -1 idle facing left
-	// 1 idle facing right, 2 walking right, 5 running right
 
-	protected int y_direction;			// 0 : not moving
-	// - 1 : up
-	// 1 : down
-
-	protected int jumpCounter;			// jumping animation takes several frames. This counter is used to keep track
-	// of this process. If the Sprite isn't jumping this should be set to -1.
-
-	protected boolean isDead;			// as the name implies, this boolean is set to true of the character dies :(
-	protected ImageResource imageResource; // This object holds all of the images that will be used to draw the Sprite.
+	protected int x_direction;			
+	protected int y_direction;			
 	
+
+	protected int jumpCounter;		
+	protected int shieldCounter;
+	protected int attackCounter;
+	protected int damageCounter;
+
+	protected boolean isDead;			
+	protected ImageResource imageResource;
+
 	protected int health;
 	protected double speed;
 	protected int damage;
-	
+
 	protected String filePath;
-	
+
 
 	// method: Sprite's packed constructor
-	// description: Initialize a new Sprite object.
-	// parameters: x_coordinate - the initial x-coordinate for Sprite.
-	//			   y_coordinate - the initial y-coordinate for Sprite.
 	public Sprite(String filePath, int x_coordinate, int y_coordinate,int health, double speed, int damage){
 		this.filePath = filePath; // added filePath
 		this.x_coordinate = x_coordinate;		// Initial coordinates for the Sprite.
 		this.y_coordinate = y_coordinate; 
-		
+
 		this.damage=damage;
 		this.speed=speed;
 		this.health=health;
@@ -57,6 +50,9 @@ public class Sprite {
 
 		imageResource = new ImageResource(filePath, 2, 80); // imageResources: filePath is src/sprite.skinwalker but that would be sprite/skinwalker/, scale int
 		jumpCounter = -1;
+		shieldCounter = -1;
+		attackCounter = -1;
+		damageCounter = -1;
 
 	}
 
@@ -99,11 +95,11 @@ public class Sprite {
 	public int getY(){
 		return y_coordinate;
 	}
-	
+
 	public void setHealth(int health) {
 		this.health=health;
 	}
-	
+
 	public int getHealth() {
 		return health;
 	}
@@ -111,50 +107,47 @@ public class Sprite {
 	// method: move
 	// description: This method should modify the Sprite's x or y (or perhaps both) coordinates.  When the 
 	//				graphics panel is repainted the Sprite will then be drawn in it's new location.
-	// parameters: int direction - This parameter should represent the direction that you want to move
-	//			   the Sprite,.
 	public void move(Component c){
 		// move to the right or left - speed will be positive
 		if(!isDead) {
-		if (((x_coordinate > - (2*imageResource.getImageOffset()) && x_direction == -2 || x_direction == -5) ||
-				(x_coordinate + imageResource.getImage().getIconWidth() + imageResource.getImageOffset() < c.getWidth() && (x_direction == 2 || x_direction == 5) ))) {
+			if (((x_coordinate > - (2*imageResource.getImageOffset()) && x_direction == -2 || x_direction == -5) ||
+					(x_coordinate + imageResource.getImage().getIconWidth() + imageResource.getImageOffset() < c.getWidth() && (x_direction == 2 || x_direction == 5) ))) {
 				x_coordinate += (x_direction)*speed;
 			}
-		
-		// jump
-		else if ((y_coordinate > 0 && y_direction == -1) || 
-				(y_coordinate + imageResource.getImage().getIconWidth() < c.getHeight()+75 && y_direction == 1 ))
-			y_coordinate += (y_direction);
 
-		if(jumpCounter >= 0 && jumpCounter < 200) {
-			jumpCounter+=5;
-			y_coordinate-=5;
-		}
-		else if(jumpCounter >= 200 && jumpCounter < 400){
-			jumpCounter+=1;
-			y_coordinate+=1;
-		}
-		else {
-			jumpCounter = -1;
-		}
+			// jump
+			else if ((y_coordinate > 0 && y_direction == -1) || 
+					(y_coordinate + imageResource.getImage().getIconWidth() < c.getHeight()+75 && y_direction == 1 ))
+				y_coordinate += (y_direction);
 
-		imageResource.updateImage(x_direction + y_direction, jumpCounter >= 0, isDead);
+			if(jumpCounter >= 0 && jumpCounter < 300) {
+				jumpCounter+=5;
+				y_coordinate-=5;
+			}
+			else if(jumpCounter >= 300 && jumpCounter < 600){
+				jumpCounter+=4;
+				y_coordinate+=4;
+			}
+			else {
+				jumpCounter = -1;
+			}
+
+			imageResource.updateImage(x_direction + y_direction, jumpCounter >= 0, isDead, shieldCounter >= 0, attackCounter >=0, damageCounter >=0);
+		}
 	}
-	}
 
-	// Methods that deal with horizontal movement. These functions don't actually move the Item, they set the direction.
-	// actual movements will occur when the the object's move method is called.
+	// Methods
 	public void walkRight() {
 		x_direction = 2;
 	}
 	public void walkLeft() {
 		x_direction = -2;
 	}
+	
 	public void run() {
 		x_direction = (x_direction < 0) ? -5 : 5;
 	}
 
-	// Methods that deal with vertical movement. These functions don't actually move the Sprite, they set the direction.
 	public void slowDown() {
 		x_direction = (x_direction < 0) ? -2 : 2;
 	}
@@ -162,16 +155,27 @@ public class Sprite {
 		x_direction = (x_direction < 0) ? -1 : 1;
 	}
 
+	public void shield() {
+		shieldCounter = shieldCounter * -1;
+	}
+
+	public void attack() {
+		attackCounter = attackCounter * -1;
+	}
+
+	public void damage() {
+		damageCounter = damageCounter * -1;
+	}
+
 	public void jump() {
 		if(jumpCounter == -1) 
 			jumpCounter = 0;
 	}
 
-	// As the method implies, calling this function makes the character die.
 	public void die() {
 		isDead = true;
 	}
-	// As the method implies, calling this function makes the character come back to life.
+
 	public void resurrect() {
 		isDead = false;
 	}
@@ -189,10 +193,7 @@ public class Sprite {
 	}
 
 	// method: draw
-	// description: This method is used to draw the image onto the GraphicsPanel.  You shouldn't need to 
-	//				modify this method.
-	// parameters: Graphics g - this object draw's the image.
-	//			   Component c - this is the component that the image will be drawn onto.
+	// description: This method is used to draw the image onto the GraphicsPanel.  
 	public void draw(Graphics g, Component c) {
 		Graphics2D g2 = (Graphics2D)g;
 
