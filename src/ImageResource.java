@@ -1,6 +1,10 @@
+// Class: ImageResources
+// Written by: Cat Attack Developers
+// Last Updated: May 22nd, 2024
+// Description: Image Resource
+
 import java.awt.Image;
 import java.net.URL;
-
 import javax.swing.ImageIcon;
 
 public class ImageResource {

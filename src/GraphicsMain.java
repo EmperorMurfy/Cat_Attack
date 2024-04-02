@@ -1,8 +1,8 @@
 // Class: GraphicsMain
-// Written by: Mr. Swope
-// Date: 1/27/2020
-// Description: This class contains the main method for this project. You shouldn't modify this class.
-//              This class must be selected when you run your project.
+// Written by: Cat Attack Developers
+// Last Updated: Apr 2, 2024
+// Description: Run this class in order to run the game and call GraphicPanel
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javazoom.jl.player.*;
@@ -12,10 +12,7 @@ public class GraphicsMain extends JFrame{
 	
 
 	public static void main(String[] args) {
-		System.out.println("print");
-		
-
-
+		System.out.println("READY PLAYER ONE");
 
 		GraphicsMain window = new GraphicsMain();
 		JPanel p = new JPanel();
