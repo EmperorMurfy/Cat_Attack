@@ -174,12 +174,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		skinWalker.draw(g2, this);
 		katze.draw(g2, this);
 
-		g2.drawString("P2",150,280);
-		g2.drawString("P1",950,280);
-
-		g2.drawString("P2",katze.x_coordinate+200,katze.y_coordinate-20); // player 1 and player two identifier
-		g2.drawString("P1",skinWalker.x_coordinate+200,skinWalker.y_coordinate-20);
-
 
 		// attack conditions
 		if(p2Attack !=null) {
@@ -258,11 +252,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			skinWalker.draw(g2, this);
 			katze.draw(g2, this);
 
-			g2.drawString("P2",150,280);
-			g2.drawString("P1",950,280);
-
-			g2.drawString("P2",katze.x_coordinate+200,katze.y_coordinate-20); // player 1 and player two identifier
-			g2.drawString("P1",skinWalker.x_coordinate+200,skinWalker.y_coordinate-20);
 
 			if(p2Attack != null) {
 				p2Attack.draw(g2, this);
