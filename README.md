@@ -9,7 +9,23 @@ In addition, Working FUnctions + Future Proposed Functions may be out of date, p
 Note: Main is the main release repository, should be the most stable version - suggested to use the files from release for most stable. 
 Please check the latest release for work in progress/buggy functions
 
+## ⚙️ Technical Info
+Developed & Tested on Macbook M1 Air 
+Written on Eclipse IDE using Java JRE 1.8
+Run GraphicMain.java to run
 
+**Quick Guide**
+1) Download ZIP from github, unzip the zip, open the folder
+
+2) Create a java project in Eclipse, must be JRE 1.8
+
+3) Drag the downloaded src + bin folders into your project
+
+4) If prompted, overwrite any previous src + bin folders in the newly created java project
+
+5) Open src/lib, right click on the jl1.0.1.jar
+
+6) Select build path -> Add to build path 
 
 ## 🎮 Controls 
 **Player One - Katze** 
