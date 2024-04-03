@@ -1,6 +1,6 @@
 // Class: Item
 // Written by: Cat Attack Developers
-// Date: May 19, 2024
+// Date: April 2, 2024
 // Description: This class implements an Item.  This Item will be drawn onto a graphics panel. 
 
 import java.awt.Component;
@@ -11,18 +11,18 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 public class Item{
-	
+
 	// movement variables
 	protected int x_coordinate;			// These ints will be used for drawing the png on the graphics panel.
 	protected int y_coordinate;			// When the Item's move method is called you should update one or both
-										// of these instance variables.  (0,0) is the top left hand corner of the
-										// panel.  x increases as you move to the right, y increases as you move down.
+	// of these instance variables.  (0,0) is the top left hand corner of the
+	// panel.  x increases as you move to the right, y increases as you move down.
 
 	protected int x_direction;			// -2 walking left, -1 idle facing left
-										// 1 idle facing right, 2 walking right
+	// 1 idle facing right, 2 walking right
 
 	protected int y_direction;			// 0 : not moving, - 1 : up, 1 : down
- 
+
 	protected ImageIcon image;			// The ImageIcon is what is actually drawn on the Panel
 
 	// method: Default constructor - see packed constructors comments for a description of parameters.
@@ -40,7 +40,7 @@ public class Item{
 	public Item(int x_coordinate, int y_coordinate, String imageString){
 		this(x_coordinate, y_coordinate, imageString, 2);
 	}
-	
+
 	// method: Item constructor
 	// description: Initialize a new Item object.
 	// parameters: x_coordinate - the initial x-coordinate for Character.
@@ -57,32 +57,32 @@ public class Item{
 
 		x_direction = -2;
 		y_direction = 0;
-		
+
 		ClassLoader cldr = this.getClass().getClassLoader();	// These lines of code load the picture.
 		String imagePath = imageString;							
 		URL imageURL = cldr.getResource(imagePath);				
-		
+
 		image = new ImageIcon(imageURL);
-		
+
 		Image scaled = image.getImage().getScaledInstance(image.getIconWidth() / imageScale, 
 				image.getIconHeight() / imageScale, Image.SCALE_SMOOTH);
-		
+
 		image = new ImageIcon(scaled);	
 	}
-	
+
 	// method: collision
 	// description: This method will return true if the Item collides with the parameter Item.
 	// return: boolean - true if the two items intersect or collide with each other, otherwise false. 
 	public void changeScale(int imageScale) {
-		
+
 		if(image.getIconWidth() > imageScale && image.getIconHeight() > imageScale) {
 			Image scaled = image.getImage().getScaledInstance(image.getIconWidth() / imageScale, 
-				image.getIconHeight() / imageScale, Image.SCALE_SMOOTH);
-		
+					image.getIconHeight() / imageScale, Image.SCALE_SMOOTH);
+
 			image = new ImageIcon(scaled);
 		}
 	}
-	
+
 	// method: getBounds
 	// description: This method will return the coordinates of a rectangle that would be drawn around the 
 	// 				Item's png.  This rectangle can be used to check to see if the Item bumps into 
@@ -100,7 +100,7 @@ public class Item{
 	public boolean collision(Item otherItem) {
 		return getBounds().intersects(otherItem.getBounds());
 	}
-	
+
 	// method: getX
 	// description:  This method will return the x-coordinate of the top left hand corner of the the image.
 	// return: int - the x-coordinate of the top left hand corner of the the image.
@@ -115,7 +115,7 @@ public class Item{
 		return y_coordinate;
 	}
 
-	
+
 	// method: move
 	// description: This method will modify the Item's x or y (or perhaps both) coordinates.  When the 
 	//				graphics panel is repainted the Item will then be drawn in it's new location.
@@ -152,7 +152,7 @@ public class Item{
 	public void moveUp() {
 		y_direction = -1;
 	}
-	
+
 	public void moveDown() {
 		y_direction = 1;
 	}
@@ -169,6 +169,15 @@ public class Item{
 	public void draw(Graphics g, Component c) {
 		image.paintIcon(c, g, x_coordinate, y_coordinate);
 
+	}
+
+	//method: containsPoint
+	//description: this method is used to identify the bounds of the x and y coordinates of the button in the Graphics Panel.
+	//parameters: int x and int y
+
+	public boolean containsPoint(int x, int y) {
+		// TODO Auto-generated method stub
+		return getBounds().contains(x,y);
 	}
 
 }
