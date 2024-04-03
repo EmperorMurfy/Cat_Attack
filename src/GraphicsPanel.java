@@ -9,8 +9,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Menu;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,18 +26,22 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class GraphicsPanel extends JPanel implements KeyListener{
+public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 
 	private Timer timer;					// The timer is used to move objects at a consistent time interval.
 
 	private Background dollHouse; // dollHouse background object
 	private Item dollHouseGround; // dollHouse 'ground' -  allows sprite to be placed in between the background & item
-	
+
+	private Background menuBackground;
+	private Background victorySkinWalker; // victory screen - skinWalker
+	private Background victoryKatze; // victory screen - Katze
 	private Item katzeProfile;
 	private Item skinWalkerProfile;
 
-	private Background victorySkinWalker; // victory screen - skinWalker
-	private Background victoryKatze; // victory screen - Katze
+
+	private Menu menu;
+	private Item playButton;
 
 	private playMusic player;
 
@@ -58,6 +65,12 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 	private int victoryMusicChecker = 0;
 
+	private enum STATE{
+		MENU,
+		GAME
+	};
+	private STATE State = STATE.MENU;
+
 
 	// create a skinWalker object
 	//	private Item item;						// This declares an Item object. You can make a Item display
@@ -72,12 +85,13 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		player.run();
 
 
-
-
 		// background info				
 		dollHouse = new Background("background/dollHouse.jpg", 2);
 		dollHouseGround = new Item(0, 0, "background/dollHouseFloor.png", 2);
-
+		menuBackground = new Background("background/menuBackground.png", 2);
+		menu = new Menu();
+		playButton= new Item(500,625, "background/playbutton.png", 10);
+		this.addMouseListener((MouseListener) this);
 		// victory screen info
 		victorySkinWalker = new Background("background/victorySkinWalker.png", 2);
 		victoryKatze = new Background("background/victoryKatze.png", 2);
@@ -117,6 +131,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		g2.drawString("P2",katze.x_coordinate+200,katze.y_coordinate-20); // player 1 and player two identifier
 		g2.drawString("P1",skinWalker.x_coordinate+200,skinWalker.y_coordinate-20);
 
+
 		// attack conditions
 		if(p2Attack !=null) {
 			p2Attack.draw(g2, this);
@@ -130,20 +145,17 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 		else {
 			g2.setColor(Color.RED);
+			Rectangle r = skinWalker.getBounds();
+			g2.draw(r);
 		}
-
-		Rectangle r = skinWalker.getBounds();
-		g2.draw(r);
-
 		if(p2Block) {
 			g2.setColor(Color.BLUE);
 		}
 		else {
 			g2.setColor(Color.RED);
+			Rectangle x = katze.getBounds();
+			g2.draw(x);
 		}
-
-		Rectangle x = katze.getBounds();
-		g2.draw(x);
 
 		// background floor - DO NOT CHANGE THE ORDER OF THIS CODE
 		dollHouseGround.draw(g2, this);
@@ -161,11 +173,12 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		g2.setColor(Color.RED);
 		g2.fillRect(100, 750,(int)katze.getHealth()*3,50);
 		g2.fillRect(900, 750,(int)skinWalker.getHealth()*3,50);
-		
+
 		//katzeProfile = new Item(1200, 750, "sprite/skinwalker/profile (1).png", 20); // images
 		//katzeProfile.draw(g2, this); 
 		// test for profile next to health bar, indicate different stats (AKA versions of character)
 		// current test, one image - future: use imageResource loadImages() to create an array of images for different stats? different profile for each
+
 
 
 		// victory condition + graphics
@@ -193,6 +206,67 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			}
 			victoryMusicChecker++;
 		}
+		if(State == STATE.GAME) {
+			dollHouse.draw(this, g);
+			skinWalker.draw(g2, this);
+			katze.draw(g2, this);
+
+			g2.drawString("P2",150,280);
+			g2.drawString("P1",950,280);
+
+			g2.drawString("P2",katze.x_coordinate+200,katze.y_coordinate-20); // player 1 and player two identifier
+			g2.drawString("P1",skinWalker.x_coordinate+200,skinWalker.y_coordinate-20);
+
+			// health bar
+			g2.setColor(Color.RED);
+			g2.fillRect(100, 300,(int)katze.getHealth()*3,50);
+			g2.fillRect(900, 300,(int)skinWalker.getHealth()*3,50);
+
+			if(p2Attack != null) {
+				p2Attack.draw(g2, this);
+			}
+			if(p1Attack != null) {
+				p1Attack.draw(g2, this);
+			}
+			g2.setColor(Color.RED);
+			Shape r = skinWalker.getBounds();
+			g2.draw(r);
+			Shape x = katze.getBounds();
+			g2.draw(x);
+
+			dollHouseGround.draw(g2, this);
+		}	
+
+		if(skinWalker.isDead) {
+			g2.setColor(Color.BLACK);
+			g2.drawString("Katze has Won!", 450, 50);
+
+
+			victoryKatze.draw(this, g2);
+			player.close();
+			if (victoryMusicChecker == 45) { // victory sound play delay lines up with player reaction speed
+				playSound("src/sounds/victoryKatze.wav");
+			}
+			victoryMusicChecker++;
+
+		}
+
+		if(katze.isDead) {
+			g2.setColor(Color.BLACK);
+			g2.drawString("Skinwalker has Won!", 450, 50);
+			victorySkinWalker.draw(this, g2);
+			player.close();
+			if (victoryMusicChecker == 45) {
+				playSound("src/sounds/victoryKatze.wav");
+			}
+			victoryMusicChecker++;
+		}
+		else if(State == STATE.MENU) {
+			menuBackground.draw(this,g);
+			playButton.draw(g2, this);
+		}
+
+
 	}
 
 	// method:clock
@@ -379,6 +453,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				skinWalker = new Sprite("sprite/skinwalker/", 1000,368,100,1,2);
 			}
 
+			else if(State == STATE.GAME) {
+
+			}
 		}
 	}
 
@@ -409,6 +486,15 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 	}
 
+	//method: mouseClicked()
+	//note: calling this function in the program will identify if the button is clicked or not 
+	public void mouseClicked(MouseEvent e) {
+		if(playButton.containsPoint(e.getX(),e.getY())) {
+			System.out.println("Play Button Clicked");
+			State = STATE.GAME;
+		}
+	}
+
 	// method: playSound() 
 	// note: calling this function will play the sound with "filePath" once
 	public static void playSound(String fileName) {
@@ -425,9 +511,23 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 	}
 
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
 
-
-
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
 }
