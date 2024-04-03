@@ -58,6 +58,7 @@ Note: shield has a certain cooldown, you cannot damage an enemy using shield, bu
 * Shield - character ability to shield, temp-allows protection against attacks + retain ability to attack, has cooldown time that is not apparent visibily in game
 * Attack - character ability to attack, currently one basic attack
 * Win/Loss System - has a win + loss conditions, with respective screens, ends game
+* Menu - basic menu with [play button] working 
 
 
 
@@ -65,8 +66,7 @@ Note: shield has a certain cooldown, you cannot damage an enemy using shield, bu
 * Combo System - technically working in Simon branch, but bug encountered in merge attempt
 * Sound Effects - certain sound effects being buggy, overlayed - walking sounds removed
 * Damage Animation - removed due to a visual glitch, function .damage() 
-* Menu - currently being worked on, released ASAP 
-* Menu Cont. - Ability to restart game and read game info, able to mute music + sfx
+* Menu Cont. - Ability to restart game and read game info, able to mute music + sfx, play custom menu music as well seperate from in-game music
 * Health Bar - revamp health bar for both visual and functional purposes
 * Profile Picture - add profile picture next to character to symbolize each character + current used stat
 * Character Stats Select - prevent players from changing stats once in game 
