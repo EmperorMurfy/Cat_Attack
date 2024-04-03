@@ -49,7 +49,7 @@ Note: shield has a certain cooldown, you cannot damage an enemy using shield, bu
 ## ✅ Working Features
 * Background - main background, with the carpet seperate as an "item" to appear like character has a walk cycle + floor is carpet like
 * Movement - able to complete basic movement, gravity + jump is working
-* Controls - basic controls for abilities + movements, see [above for keybinds](https://github.com/EmperorMurfy/Cat_Attack/tree/main?tab=readme-ov-file#-working-features)
+* Controls - basic controls for abilities + movements, see [above for keybinds](* 8, 9, 0: different stats)
 * Sound Effects - graphicPanel function, playSound() - this function will play the sound with "filePath" once when called
 * Music - playMusic.java, contains two functions, run() + close() - this function will play sound on loop until close()
 * Character Stats Select - check above at controls for more info, able to change individual character stats for buffs/debuffs tradeoffs
