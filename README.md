@@ -4,7 +4,7 @@ Cat Attack is a 1v1, two player fighting game in which players duel in a 2D envi
 Written completely in Java, **Cat Attack!** is a game still under development. Build as apart of the AP Computer Science Game Collaboration Project, this game was an original idea proposed by group members highly inspired by Street Fighter. 
 As it is still in the works, the game may be rough around the edges, with any branch other than main not guaranteed to be functional. 
 
-In addition, Working FUnctions + Future Proposed Functions may be out of date, please check the latest release for more up to date info. 
+In addition, [Working Function](https://github.com/EmperorMurfy/Cat_Attack/tree/main?tab=readme-ov-file#-working-features) + [Future Proposed Functions](https://github.com/EmperorMurfy/Cat_Attack/tree/main?tab=readme-ov-file#-working-features) may be out of date, please check the latest release for more up to date info. 
 
 Note: Main is the main release repository, should be the most stable version - suggested to use the files from release for most stable. 
 Please check the latest release for work in progress/buggy functions
@@ -15,7 +15,7 @@ Written on Eclipse IDE using Java JRE 1.8
 Run GraphicMain.java to run
 
 **Quick Guide**
-1) Download ZIP from github, unzip the zip, open the folder
+1) Download latest release from github, unzip the zip file, open the unzipped folder
 
 2) Create a java project in Eclipse, must be JRE 1.8
 
@@ -34,20 +34,22 @@ Run GraphicMain.java to run
 * W - jump
 * S - attack
 * Q - shield 
+* 1, 2, 3: different stats
 
 **Player Two - Skin Walker**
 * ⬅️ - move left
 * ➡️ - move right
 * ⬆️ - jump
 * ⬇️ - attack
-* SHIFT - shield
+* **SHIFT** - shield
+* 8, 9, 0: different stats
 
 Note: shield has a certain cooldown, you cannot damage an enemy using shield, but they can attack you
 
 ## ✅ Working Features
 * Background - main background, with the carpet seperate as an "item" to appear like character has a walk cycle + floor is carpet like
 * Movement - able to complete basic movement, gravity + jump is working
-* Controls - basic controls for abilities + movements, see above for keybinds
+* Controls - basic controls for abilities + movements, see [above for keybinds](https://github.com/EmperorMurfy/Cat_Attack/tree/main?tab=readme-ov-file#-working-features)
 * Sound Effects - graphicPanel function, playSound() - this function will play the sound with "filePath" once when called
 * Music - playMusic.java, contains two functions, run() + close() - this function will play sound on loop until close()
 * Character Stats Select - check above at controls for more info, able to change individual character stats for buffs/debuffs tradeoffs
