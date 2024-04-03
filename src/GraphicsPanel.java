@@ -33,18 +33,32 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	private Background dollHouse; // dollHouse background object
 	private Item dollHouseGround; // dollHouse 'ground' -  allows sprite to be placed in between the background & item
 
-	private Background menuBackground;
+	// win/loss
 	private Background victorySkinWalker; // victory screen - skinWalker
 	private Background victoryKatze; // victory screen - Katze
+
+	// profile test
 	private Item katzeProfile;
 	private Item skinWalkerProfile;
 
 
+	// menu variables
+	private Background menuBackground;
 	private Menu menu;
 	private Item playButton;
 
-	private playMusic player;
+	// pause variables
+	private Background pauseBackground;
+	private Item resumeButton;
+	private Item restartButton;
+	private Item controlsButton;
+	private int pauseCounter;
 
+	// music variables
+	private playMusic player;
+	private int victoryMusicChecker = 0;
+
+	// sprite + sprite condition variables
 	private Sprite skinWalker;
 	private Sprite katze; // p2 replaced as katze
 
@@ -63,12 +77,28 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	private int wait1=0;
 	private int wait2=0;
 
-	private int victoryMusicChecker = 0;
+	// combo system
 
+	private ArrayList<Character> p1Combo = new ArrayList<>();
+	private ArrayList<Character> p2Combo = new ArrayList<>();
+
+	private String player1Combo ="";
+	private String player2Combo ="";
+
+
+	private boolean play1ComboP =true;
+	private boolean play2ComboP =true;
+
+
+
+	// state variable
 	private enum STATE{
 		MENU,
-		GAME
+		GAME,
+		PAUSE,
+		CONTROLS,
 	};
+
 	private STATE State = STATE.MENU;
 
 
@@ -81,16 +111,34 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 
 	public GraphicsPanel(){
 		// music
-		player = new playMusic("src/sounds/loop.wav"); 
+		player = new playMusic("src/sounds/ambient.wav"); 
 		player.run();
+
+
+		// pause condition
+		pauseCounter = -1;
 
 
 		// background info				
 		dollHouse = new Background("background/dollHouse.jpg", 2);
 		dollHouseGround = new Item(0, 0, "background/dollHouseFloor.png", 2);
-		menuBackground = new Background("background/menuBackground.png", 2);
+
+
+		// menu 
 		menu = new Menu();
+		menuBackground = new Background("background/menuBackground.png", 2);
 		playButton= new Item(500,625, "background/playbutton.png", 10);
+
+		// pause
+		pauseBackground = new Background("background/pauseBackground.png", 2);
+		resumeButton = new Item(525,360, "background/resumeButton.png", 10);
+		restartButton = new Item(520, 440, "background/restartButton.png", 10);
+		controlsButton = new Item(510, 520, "background/controlsButton.png", 10);
+		
+		// controls 
+		
+
+
 		this.addMouseListener((MouseListener) this);
 		// victory screen info
 		victorySkinWalker = new Background("background/victorySkinWalker.png", 2);
@@ -102,8 +150,9 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		// image smaller, so the bigger the scale, the smaller the image will be.
 		//	items = new ArrayList<Item>();
 
-		skinWalker = new Sprite("sprite/skinwalker/", 1000, 368,100,1,1); // name = new Sprite(x value, y value, health, speed, attack);
-		katze = new Sprite("sprite/katze/", 50,368,100,1,1);
+		skinWalker = new Sprite("sprite/skinwalker/", 1000, 368,100,1,1);
+		skinWalker.x_direction = -1; // name = new Sprite(x value, y value, health, speed, attack);
+		katze = new Sprite("sprite/katze/", -80,368,100,1,1);
 
 
 		setPreferredSize(new Dimension(dollHouse.getImage().getIconWidth(),
@@ -161,6 +210,21 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		dollHouseGround.draw(g2, this);
 
 
+		// health bar + background
+
+		g2.setColor(Color.BLACK);
+		g2.fillRect(100, 675, 300,50); // currently fixed length at 300, default character
+		g2.fillRect(900, 675, 300,50); // to be updated based on unique hp of each character? 
+		// Could fix this bug with an actual image as health BAR with indicators of each character HP level
+		// idea: draw a custom health bar instead of a black bar. 
+		// OR, put a transparent backed, lined bar, thick enough to cover the red as a border
+		// then put a black background behind the red. 
+
+		g2.setColor(Color.RED);
+		g2.fillRect(100, 675,(int)katze.getHealth()*3,50);
+		g2.fillRect(900, 675,(int)skinWalker.getHealth()*3,50);
+
+
 
 
 		// victory condition + graphics
@@ -189,6 +253,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			victoryMusicChecker++;
 		}
 		if(State == STATE.GAME) {
+
 			dollHouse.draw(this, g);
 			skinWalker.draw(g2, this);
 			katze.draw(g2, this);
@@ -260,9 +325,18 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			}
 			victoryMusicChecker++;
 		}
-		else if(State == STATE.MENU) {
+
+		else if(State == STATE.MENU) { // menu
+
 			menuBackground.draw(this,g);
 			playButton.draw(g2, this);
+		}
+
+		else if (State == STATE.PAUSE) {
+			pauseBackground.draw(this,g);
+			resumeButton.draw(g2, this);
+			restartButton.draw(g2, this);
+			controlsButton.draw(g2, this);
 		}
 
 
@@ -279,17 +353,74 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		// damage conditions + graphics
 		if(!p1Block) {
 			if(p2Attack!=null&&skinWalker.collision(p2Attack)) {
-				skinWalker.setHealth(skinWalker.getHealth()-katze.damage);
-				// 	skinWalker.damage();
-				System.out.println(skinWalker.getHealth()+"p1");
+				if(p2Combo.size()>=4) {
+					for(int i =p2Combo.size()-4;i<p2Combo.size();i++) {
+						player2Combo += p2Combo.get(i);
+					}
+					if(play2ComboP&&player2Combo.equals("wwws")) {
+						skinWalker.health=(int)skinWalker.health/2;
+						play2ComboP =false;
+					}
+					if(play2ComboP&&player2Combo.equals("ddds")) {
+						skinWalker.x_coordinate+=200;
+						play2ComboP =false;
+					}
+					if(play2ComboP&&player2Combo.equals("aaas")) {
+						skinWalker.x_coordinate-=200;
+						play2ComboP =false;
+					}
+					if(play2ComboP&&player2Combo.equals("dsds")) {
+						if(skinWalker.health<50)
+							skinWalker.health=0;
+						play2ComboP =false;
+					}
+					if(play2ComboP&&player2Combo.equals("asas")) {
+						if(skinWalker.health<50)
+							skinWalker.health=0;
+						play2ComboP =false;
+					}
+				}
+				player2Combo="";
+				if(play2ComboP) {
+					skinWalker.setHealth(skinWalker.getHealth()-katze.damage);
+					System.out.println(skinWalker.getHealth()+"p1");
+				}
 			}
 		}
 
 		if(!p2Block) {
 			if(p1Attack!=null&&katze.collision(p1Attack)) {
-				katze.setHealth(katze.getHealth()-skinWalker.damage);
-				// katze.damage(); - removed for visual error
-				System.out.println(katze.getHealth()+"p2");
+				if(p1Combo.size()>=4) {
+					for(int i =p1Combo.size()-4;i<p1Combo.size();i++) {
+						player1Combo += p1Combo.get(i);
+					}
+					if(play1ComboP&&player1Combo.equals("wwws")) {
+						katze.health=(int)katze.health/2;
+						play1ComboP =false;
+					}
+					if(play1ComboP&&player1Combo.equals("aaas")) {
+						katze.x_coordinate-=200;
+						play1ComboP =false;
+					}
+					if(play1ComboP&&player1Combo.equals("ddds")) {
+						katze.x_coordinate+=200;
+						play1ComboP =false;
+					}
+					if(play1ComboP&&player1Combo.equals("asas")) {
+						if(katze.health<50)
+							katze.health=0;
+						play1ComboP =false;
+					}
+					if(play1ComboP&&player1Combo.equals("dsds")) {
+						if(katze.health<50)
+							katze.health=0;
+						play1ComboP =false;
+					}
+				}
+				player1Combo="";
+				if(play1ComboP) {
+					katze.setHealth(katze.getHealth()-skinWalker.damage);
+					System.out.println(katze.getHealth()+"p2");}
 			}
 		}
 
@@ -367,93 +498,123 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(!skinWalker.isDead&&!katze.isDead) {
+			if (State == STATE.GAME) {
 
-			// skinWalker controls - player left
-			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				skinWalker.walkRight();
-			}
+				// skinWalker controls - player left
+				if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					skinWalker.walkRight();
+					p1Combo.add('d');
+				}
 
-			else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-				skinWalker.walkLeft();
+				else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+					skinWalker.walkLeft();
+					p1Combo.add('a');
 
-			}
+				}
 
-			else if(e.getKeyCode() == KeyEvent.VK_UP) {
-				skinWalker.jump();
-				playSound("src/sounds/jump.wav");
-			}
+				else if(e.getKeyCode() == KeyEvent.VK_UP) {
+					skinWalker.jump();
+					p1Combo.add('w');
+					playSound("src/sounds/jump.wav");
+				}
 
-			else if(e.getKeyCode()== KeyEvent.VK_DOWN) {
-				if(skinWalker.x_direction<0) {
-					p1Attack = new Item(skinWalker.x_coordinate, skinWalker.y_coordinate, "images/objects/invis.png", 1);} // images
-				else p1Attack = new Item(skinWalker.x_coordinate+450, skinWalker.y_coordinate, "images/objects/invis.png", 1); // images
-				skinWalker.attack(); 
-				playSound("src/sounds/skinWalkerPunch.wav");
-			}
+				else if(e.getKeyCode()== KeyEvent.VK_DOWN) {
+					if(skinWalker.x_direction<0) {
+						p1Attack = new Item(skinWalker.x_coordinate, skinWalker.y_coordinate, "images/objects/invis.png", 1);} // images
+					else p1Attack = new Item(skinWalker.x_coordinate+450, skinWalker.y_coordinate, "images/objects/invis.png", 1); // images
+					skinWalker.attack(); 
+					p1Combo.add('s');
+					play1ComboP =true;
+					playSound("src/sounds/skinWalkerPunch.wav");
+				}
 
-			else if(e.getKeyCode()==KeyEvent.VK_SHIFT&&wait1==0&&p1Block==false) { // bug detected: both left and right shift trigger VK_SHIFT
-				p1Block=true;
-				skinWalker.shield(); // shield doesn't come off visually
-				playSound("src/sounds/shield.wav");
-				System.out.println("block on");
-			}
-
-
-			// katze controls - player right
-			else if(e.getKeyCode() == KeyEvent.VK_D) {
-				katze.walkRight();
-			}
-
-			else if(e.getKeyCode() == KeyEvent.VK_A) {
-				katze.walkLeft();
-			}
-
-			else if(e.getKeyCode() == KeyEvent.VK_W) {
-				katze.jump();
-				playSound("src/sounds/jump.wav"); // sound effect
-			}
-
-			else if(e.getKeyCode()== KeyEvent.VK_S) { // attack
-				if(katze.x_direction<0) {
-					p2Attack = new Item(katze.x_coordinate, katze.y_coordinate, "images/objects/invis.png", 1); // invis refers to an image with the same size as 
-				} // images
-				else { 
-					p2Attack = new Item(katze.x_coordinate+350, katze.y_coordinate, "images/objects/invis.png", 1); // signArrow.png, but just erased (maybe rename?)
-				} // images 
-				katze.attack(); 
-				playSound("src/sounds/katzePunch.wav");
-			}
-
-			else if(e.getKeyCode()==KeyEvent.VK_Q&&wait2==0&&p2Block==false) {
-				p2Block=true;
-				katze.shield(); 
-				playSound("src/sounds/shield.wav");
-				System.out.println("block on");
-			}
+				else if(e.getKeyCode()==KeyEvent.VK_SHIFT&&wait1==0&&p1Block==false) { // bug detected: both left and right shift trigger VK_SHIFT
+					p1Block=true;
+					skinWalker.shield(); // shield doesn't come off visually
+					playSound("src/sounds/shield.wav");
+					System.out.println("block on");
+				}
 
 
-			// switching characters 
-			else if(e.getKeyCode()==KeyEvent.VK_1) {
-				katze = new Sprite("sprite/katze/", 50,368,50,2,3);
-			}
-			else if(e.getKeyCode()==KeyEvent.VK_2) {
-				katze = new Sprite("sprite/katze/", 50,368,150,.5,2);
-			}
-			else if(e.getKeyCode()==KeyEvent.VK_3) {
-				katze = new Sprite("sprite/katze/", 50,368,100,1,2);
-			}
-			else if(e.getKeyCode()==KeyEvent.VK_8) {
-				skinWalker = new Sprite("sprite/skinwalker/", 1000,368,50,2,3);
-			}
-			else if(e.getKeyCode()==KeyEvent.VK_9) {
-				skinWalker = new Sprite("sprite/skinwalker/", 1000,368,150,.5,2);
-			}
-			else if(e.getKeyCode()==KeyEvent.VK_0) {
-				skinWalker = new Sprite("sprite/skinwalker/", 1000,368,100,1,2);
+				// katze controls - player right
+				else if(e.getKeyCode() == KeyEvent.VK_D) {
+					katze.walkRight();
+					p2Combo.add('d');
+				}
+
+				else if(e.getKeyCode() == KeyEvent.VK_A) {
+					katze.walkLeft();
+					p2Combo.add('a');
+				}
+
+				else if(e.getKeyCode() == KeyEvent.VK_W) {
+					katze.jump();
+					p2Combo.add('w');
+					playSound("src/sounds/jump.wav"); // sound effect
+				}
+
+				else if(e.getKeyCode()== KeyEvent.VK_S) { // attack
+					if(katze.x_direction<0) {
+						p2Attack = new Item(katze.x_coordinate, katze.y_coordinate, "images/objects/invis.png", 1); // invis refers to an image with the same size as 
+					} // images
+					else { 
+						p2Attack = new Item(katze.x_coordinate+350, katze.y_coordinate, "images/objects/invis.png", 1); // signArrow.png, but just erased (maybe rename?)
+					} // images 
+					katze.attack(); 
+					p2Combo.add('s');
+					play2ComboP =true;
+					playSound("src/sounds/katzePunch.wav");
+				}
+
+				else if(e.getKeyCode()==KeyEvent.VK_Q&&wait2==0&&p2Block==false) {
+					p2Block=true;
+					katze.shield(); 
+					playSound("src/sounds/shield.wav");
+					System.out.println("block on");
+				}
+
+
+				// switching characters 
+				else if(e.getKeyCode()==KeyEvent.VK_1) {
+					katze = new Sprite("sprite/katze/", -80,368,50,2,3);
+				}
+				else if(e.getKeyCode()==KeyEvent.VK_2) {
+					katze = new Sprite("sprite/katze/", -80,368,150,.5,2);
+				}
+				else if(e.getKeyCode()==KeyEvent.VK_3) {
+					katze = new Sprite("sprite/katze/", -80,368,100,1,2);
+				}
+				else if(e.getKeyCode()==KeyEvent.VK_8) {
+					skinWalker = new Sprite("sprite/skinwalker/", 1000,368,50,2,3);
+					skinWalker.x_direction = -1;
+				}
+				else if(e.getKeyCode()==KeyEvent.VK_9) {
+					skinWalker = new Sprite("sprite/skinwalker/", 1000,368,150,.5,2);
+					skinWalker.x_direction = -1;
+				}
+				else if(e.getKeyCode()==KeyEvent.VK_0) {
+					skinWalker = new Sprite("sprite/skinwalker/", 1000,368,100,1,2);
+					skinWalker.x_direction = -1;
+				}
 			}
 
-			else if(State == STATE.GAME) {
-
+			// allows the toggle on and off of game pause 
+			if (State == STATE.GAME || State == STATE.PAUSE) {
+				if (e.getKeyCode()==KeyEvent.VK_ESCAPE) {
+					pauseCounter*=-1;
+					if (pauseCounter == 1) {
+						State = STATE.PAUSE;
+						player.close();
+						player = new playMusic("src/sounds/ambient.wav"); 
+						player.run();
+					}
+					else if (pauseCounter == -1) {
+						State = STATE.GAME;
+						player.close();
+						player = new playMusic("src/sounds/loop.wav"); 
+						player.run();
+					}
+				}
 			}
 		}
 	}
@@ -487,10 +648,40 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 
 	//method: mouseClicked()
 	//note: calling this function in the program will identify if the button is clicked or not 
-	public void mouseClicked(MouseEvent e) {
-		if(playButton.containsPoint(e.getX(),e.getY())) {
-			System.out.println("Play Button Clicked");
-			State = STATE.GAME;
+	public void mouseClicked(MouseEvent e) { // will set state to game 
+		if (State == STATE.MENU) {
+			if(playButton.containsPoint(e.getX(),e.getY())) {
+				System.out.println("Play Button Clicked");
+				player.close();
+				State = STATE.GAME;
+				player = new playMusic("src/sounds/loop.wav"); 
+				player.run();
+			}
+		}
+		if (State == STATE.PAUSE) {
+			if(restartButton.containsPoint(e.getX(),e.getY())) { 
+				System.out.println("Restart Button Clicked"); 
+
+				// reset character to default
+				skinWalker = new Sprite("sprite/skinwalker/", 1000, 368,100,1,1);
+				skinWalker.x_direction = -1;// name = new Sprite(x value, y value, health, speed, attack);
+				katze = new Sprite("sprite/katze/", 50,368,100,1,1);
+
+				State = State.MENU;
+			}
+
+			if (resumeButton.containsPoint(e.getX(), e.getY())) {
+				System.out.println("Resume Button Clicked");
+				player.close();
+				State = State.GAME; 
+				player = new playMusic("src/sounds/loop.wav");
+				player.run();
+			}
+
+			if (controlsButton.containsPoint(e.getX(), e.getY())) {
+				System.out.println("Controls Button Clicked");
+				// work in progress
+			}
 		}
 	}
 
