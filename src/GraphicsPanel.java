@@ -160,24 +160,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		// background floor - DO NOT CHANGE THE ORDER OF THIS CODE
 		dollHouseGround.draw(g2, this);
 
-		// health bar + background
-
-		g2.setColor(Color.BLACK);
-		g2.fillRect(100, 750, 300,50); // currently fixed length at 300, default character
-		g2.fillRect(900, 750, 300,50); // to be updated based on unique hp of each character? 
-		// Could fix this bug with an actual image as health BAR with indicators of each character HP level
-		// idea: draw a custom health bar instead of a black bar. 
-		// OR, put a transparent backed, lined bar, thick enough to cover the red as a border
-		// then put a black background behind the red. 
-
-		g2.setColor(Color.RED);
-		g2.fillRect(100, 750,(int)katze.getHealth()*3,50);
-		g2.fillRect(900, 750,(int)skinWalker.getHealth()*3,50);
-
-		//katzeProfile = new Item(1200, 750, "sprite/skinwalker/profile (1).png", 20); // images
-		//katzeProfile.draw(g2, this); 
-		// test for profile next to health bar, indicate different stats (AKA versions of character)
-		// current test, one image - future: use imageResource loadImages() to create an array of images for different stats? different profile for each
 
 
 
@@ -217,11 +199,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			g2.drawString("P2",katze.x_coordinate+200,katze.y_coordinate-20); // player 1 and player two identifier
 			g2.drawString("P1",skinWalker.x_coordinate+200,skinWalker.y_coordinate-20);
 
-			// health bar
-			g2.setColor(Color.RED);
-			g2.fillRect(100, 300,(int)katze.getHealth()*3,50);
-			g2.fillRect(900, 300,(int)skinWalker.getHealth()*3,50);
-
 			if(p2Attack != null) {
 				p2Attack.draw(g2, this);
 			}
@@ -235,6 +212,28 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			g2.draw(x);
 
 			dollHouseGround.draw(g2, this);
+
+			// health bar + background
+
+			g2.setColor(Color.BLACK);
+			g2.fillRect(100, 675, 300,50); // currently fixed length at 300, default character
+			g2.fillRect(900, 675, 300,50); // to be updated based on unique hp of each character? 
+			// Could fix this bug with an actual image as health BAR with indicators of each character HP level
+			// idea: draw a custom health bar instead of a black bar. 
+			// OR, put a transparent backed, lined bar, thick enough to cover the red as a border
+			// then put a black background behind the red. 
+
+			g2.setColor(Color.RED);
+			g2.fillRect(100, 675,(int)katze.getHealth()*3,50);
+			g2.fillRect(900, 675,(int)skinWalker.getHealth()*3,50);
+
+
+
+			//katzeProfile = new Item(1200, 750, "sprite/skinwalker/profile (1).png", 20); // images
+			//katzeProfile.draw(g2, this); 
+			// test for profile next to health bar, indicate different stats (AKA versions of character)
+			// current test, one image - future: use imageResource loadImages() to create an array of images for different stats? different profile for each
+
 		}	
 
 		if(skinWalker.isDead) {
