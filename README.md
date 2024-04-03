@@ -1,7 +1,7 @@
 # Cat Attack!
 Cat Attack is a 1v1, two player fighting game in which players duel in a 2D environment. 
 
-Written completely in Java, **Cat Attack!** is a game still in developmnent. Build as apart of the AP Computer Science Game Collaboration Project, this game was an original idea proposed by group members highly inspired by Street Fighter. 
+Written completely in Java, **Cat Attack!** is a game still in development. Build as apart of the AP Computer Science Game Collaboration Project, this game was an original idea proposed by group members highly inspired by Street Fighter. 
 As it is still in the works, the game may be rough around the edges, with any branch other than main not guaranteed to be functional. 
 
 In addition, Working FUnctions + Future Proposed Functions may be out of date, please check the latest release for more up to date info. 
