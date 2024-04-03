@@ -207,9 +207,9 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			}
 			g2.setColor(Color.RED);
 			Shape r = skinWalker.getBounds();
-			g2.draw(r);
+			//g2.draw(r);
 			Shape x = katze.getBounds();
-			g2.draw(x);
+			//g2.draw(x); // character hitbox visualizer
 
 			dollHouseGround.draw(g2, this);
 
