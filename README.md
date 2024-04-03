@@ -28,7 +28,7 @@ Please check the latest release for work in progress/buggy functions
 
 Note: shield has a certain cooldown, you cannot damage an enemy using shield, but they can attack you
 
-## ✅ Working Functions
+## ✅ Working Features
 * Background - main background, with the carpet seperate as an "item" to appear like character has a walk cycle + floor is carpet like
 * Movement - able to complete basic movement, gravity + jump is working
 * Controls - basic controls for abilities + movements, see above for keybinds
@@ -43,7 +43,7 @@ Note: shield has a certain cooldown, you cannot damage an enemy using shield, bu
 
 
 
-## 🔮 Future Proposed Functions 
+## 🔮 Future Proposed Features
 * Combo System - technically working in Simon branch, but bug encountered in merge attempt
 * Sound Effects - certain sound effects being buggy, overlayed - walking sounds removed
 * Damage Animation - removed due to a visual glitch, function .damage() 
