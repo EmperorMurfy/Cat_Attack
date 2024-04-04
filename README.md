@@ -44,7 +44,10 @@ Run GraphicMain.java to run
 * **SHIFT** - shield
 * 8, 9, 0: different stats
 
-Note: Shield has a certain cooldown. While in use, you are invulnerable to enemy attacks, while maintaining your own ability to attack
+**In Game**
+* ESC - pauses the game, or unpause (you also have game pause screen options such as restart or resume game
+
+Note: Shield - allows for temporary invulnerabilituy to enemy attacks + maintains own ability to attack 
 
 ## ✅ Working Features
 * Background - main background, with the carpet seperate as an "item" to appear like character has a walk cycle + floor is carpet like
@@ -71,6 +74,7 @@ Note: Shield has a certain cooldown. While in use, you are invulnerable to enemy
 * Profile Picture - add profile picture next to character to symbolize each character + current used stat
 * Character Stats Select - prevent players from changing stats once in game 
 * Character Select Screen - when adding more characters, and allows them to select their stats as they wish
+
 
 
 
