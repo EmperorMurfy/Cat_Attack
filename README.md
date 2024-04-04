@@ -44,7 +44,7 @@ Run GraphicMain.java to run
 * **SHIFT** - shield
 * 8, 9, 0: different stats
 
-Note: shield has a certain cooldown, you cannot damage an enemy using shield, but they can attack you
+Note: Shield has a certain cooldown. While in use, you are invulnerable to enemy attacks, while maintaining your own ability to attack
 
 ## ✅ Working Features
 * Background - main background, with the carpet seperate as an "item" to appear like character has a walk cycle + floor is carpet like
