@@ -81,11 +81,11 @@ Please run GraphicMain.java in the src to start the program
   -  Added pause game menu with [controls button] [restart game button] [resume button]
   - Added controls menu, allows players to take a look at control keybinds
   - Added game over options, allow users to restart or quit the game
+* Combo System - a combo system, a specific combination moves will be able to enable a certain actions or effects towards an enemy
 
 
 
 ## 🔮 Future Proposed Features
-* Combo System - technically working in Simon branch, but bug encountered in merge attempt
 * Sound Effects - certain sound effects being buggy, overlayed - walking sounds removed
 * Damage Animation - removed due to a visual glitch, function .damage() 
 * Menu Cont. - able to mute music + sfx
