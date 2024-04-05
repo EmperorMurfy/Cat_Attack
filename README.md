@@ -44,10 +44,25 @@ Run GraphicMain.java to run
 * **SHIFT** - shield
 * 8, 9, 0: different stats
 
-**In Game**
-* ESC - pauses the game, or unpause (you also have game pause screen options such as restart or resume game
+**Main Menu**
+* ESC - will bring up controls, similar to how control button behaves in the pause game menu?
+* Start button - starts the game
 
-Note: Shield - allows for temporary invulnerabilituy to enemy attacks + maintains own ability to attack 
+**In Game**
+* ESC - pauses the game, can also be used to unpause if paused - brings up pause game menu
+     - restart button: resets the game & return players to Main Menu
+     - resume button: resumes the game, you can also press ESC to do the same
+     - controls button: will open a window that allows you to understand the controls + game
+**End Screen**
+* automatic bring up, 500 counter (will play when victory music ends) - game over options
+  - restart button: resets the game & return players to Main Menu
+  - quit button: closes the program and exits
+
+
+
+
+
+**Note: Shield allows for temporary invulnerabilituy to enemy attacks + maintains own ability to attack**
 
 ## ✅ Working Features
 * Background - main background, with the carpet seperate as an "item" to appear like character has a walk cycle + floor is carpet like
@@ -61,7 +76,10 @@ Note: Shield - allows for temporary invulnerabilituy to enemy attacks + maintain
 * Shield - character ability to shield, temp-allows protection against attacks + retain ability to attack, has cooldown time that is not apparent visibily in game
 * Attack - character ability to attack, currently one basic attack
 * Win/Loss System - has a win + loss conditions, with respective screens, ends game
-* Menu - basic menu with [play button] working 
+* Menu - basic menu with [play button] working
+  -  Added pause game menu with [controls button] [restart game button] [resume button]
+  - Added controls menu, allows players to take a look at control keybinds
+  - Added game over options, allow users to restart or quit the game
 
 
 
@@ -74,10 +92,6 @@ Note: Shield - allows for temporary invulnerabilituy to enemy attacks + maintain
 * Profile Picture - add profile picture next to character to symbolize each character + current used stat
 * Character Stats Select - prevent players from changing stats once in game 
 * Character Select Screen - when adding more characters, and allows them to select their stats as they wish
-
-
-
-
 
 
 
