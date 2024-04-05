@@ -66,11 +66,6 @@ public class Sprite {
 	}
 
 	// method: getBounds
-	// description: This method will return the coordinates of a rectangle that would be drawn around the 
-	// 				Sprite's png.  This rectangle can be used to check to see if the Item bumps into 
-	//				another Item or Sprite on your panel. This method is called by the collision methods in Sprite 
-	//              and Item. You probably won't call this method directly.
-	// return: A Rectangle - This rectangle would be like drawing a rectangle around the Character's image.
 	public Rectangle getBounds(){
 		if(x_direction < 0)
 			return new Rectangle(x_coordinate + imageResource.getImageOffset(), y_coordinate, 
@@ -83,15 +78,11 @@ public class Sprite {
 	}
 
 	// method: getX
-	// description:  This method will return the x-coordinate of the top left hand corner of the the image.
-	// return: int - the x-coordinate of the top left hand corner of the the image.
 	public int getX(){
 		return x_coordinate;
 	}
 
 	// method: getY
-	// description:  This method will return the y-coordinate of the top left hand corner of the the image.
-	// return: int - the y-coordinate of the top left hand corner of the the image.
 	public int getY(){
 		return y_coordinate;
 	}
@@ -105,8 +96,6 @@ public class Sprite {
 	}
 
 	// method: move
-	// description: This method should modify the Sprite's x or y (or perhaps both) coordinates.  When the 
-	//				graphics panel is repainted the Sprite will then be drawn in it's new location.
 	public void move(Component c){
 		// move to the right or left - speed will be positive
 		if(!isDead) {

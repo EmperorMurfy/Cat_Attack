@@ -1,4 +1,4 @@
-// Class: GraphicsMain
+// Class: GraphicsMain 
 // Written by: Cat Attack Developers
 // Last Updated: Apr 2, 2024
 // Description: Run this class in order to run the game and call GraphicPanel

@@ -101,23 +101,32 @@ public class ImageResource {
 		if(isDead) {
 			image = deadImages[0];
 		}
+		
 		else if(jumping) {
 			jumpCount = (jumpCount < (imageMax * 6)-1) ? jumpCount+1 : 0;
 			image = jumpingImages[0];
-		}else if(shield) { // shield 
+		}
+		
+		else if(shield) { // shield 
 			shieldCount = (shieldCount < (imageMax*6)-1) ? shieldCount+1 :0;
 			image = shieldImages[imageCount];
-		}else if (attack) {
+		}
+		
+		else if (attack) {
 			attackCount = (attackCount < (imageMax*6)-1 ? attackCount+1 :0);
 			image = attackImages[imageCount];
-		}else if (damage) {
+		}
+		
+		else if (damage) {
 			damageCount = (damageCount < (imageMax*6)-1 ? damageCount+1 :0);
 			image = damageImages[imageCount];
 		}
+		
 		// idle 
 		else if(Math.abs(x_direction) == 1){
 			image = idleImages[imageCount];
 		}
+		
 		// running or walking
 		else {
 			image = runningImages[imageCount];
