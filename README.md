@@ -88,7 +88,7 @@ Please run GraphicMain.java in the src to start the program
 * Combo System - technically working in Simon branch, but bug encountered in merge attempt
 * Sound Effects - certain sound effects being buggy, overlayed - walking sounds removed
 * Damage Animation - removed due to a visual glitch, function .damage() 
-* Menu Cont. - Ability to restart game and read game info, able to mute music + sfx, play custom menu music as well seperate from in-game music
+* Menu Cont. - able to mute music + sfx
 * Health Bar - revamp health bar for both visual and functional purposes
 * Profile Picture - add profile picture next to character to symbolize each character + current used stat
 * Character Stats Select - prevent players from changing stats once in game 
