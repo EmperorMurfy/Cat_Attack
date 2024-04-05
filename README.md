@@ -12,7 +12,8 @@ Please check the latest release for work in progress/buggy functions
 ## ⚙️ Technical Info
 Developed & Tested on Macbook M1 Air 
 Written on Eclipse IDE using Java JRE 1.8
-Run GraphicMain.java to run
+
+Please run GraphicMain.java in the src to start the program
 
 **Quick Guide**
 1) Download latest release from github, unzip the zip file, open the unzipped folder
