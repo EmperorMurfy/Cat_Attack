@@ -5,6 +5,7 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Menu;
@@ -46,6 +47,9 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	private Background menuBackground;
 	private Menu menu;
 	private Item playButton;
+
+	// character select 
+	private Background selectBackground;
 
 	// game paused menu
 	private Background pauseBackground;
@@ -104,9 +108,17 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	private boolean play1ComboP =true;
 	private boolean play2ComboP =true;
 
+	// characterSelect
+	private Background characterSelectBackground;
+	private Item vsButton;
+	private Item rightStat;
+	private Item leftStat;
+
+
 	// menu: STATE 
 	private enum STATE{
 		MENU,
+		CHARACTERSELECT,
 		GAME,
 		PAUSE,
 		CONTROLSMAIN,
@@ -123,6 +135,14 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	//private Item skinWalkerProfile;
 
 	public GraphicsPanel(){
+
+		// characterSelect menu
+		characterSelectBackground = new Background("background/characterSelectBackground.png", 2);
+		vsButton = new Item (480, 200, "background/vsButton.png", 2);
+		rightStat = new Item (860, 552, "buttons/normalRight.png", 2);
+		leftStat = new Item (90, 552, "buttons/normalLeft.png", 2);
+
+
 		// sprite
 		skinWalker = new Sprite("sprite/skinwalker/", 1000, 368,100,1,1);
 		skinWalker.x_direction = -1; // name = new Sprite(x value, y value, health, speed, attack);
@@ -148,6 +168,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		resumeButton = new Item(525, 440, "background/resumeButton.png", 10); 
 		restartButton = new Item(520, 520, "background/restartButton.png", 10); 
 		controlsButton = new Item(510, 360, "background/controlsButton.png", 10);
+
 
 		// control/keybinds menu
 		controlsBackground = new Background("background/controlsBackground.png", 2);
@@ -191,6 +212,8 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 		dollHouse.draw(this, g);
+
+
 
 		// draw characters
 		skinWalker.draw(g2, this);
@@ -246,20 +269,22 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			victoryTimer++;
 		}
 
-		
+
+
+
 		// GAME
 		if(State == STATE.GAME) {
 			dollHouse.draw(this, g);
 			skinWalker.draw(g2, this);
 			katze.draw(g2, this);
-			
+
 			if(p2Attack != null) {
 				p2Attack.draw(g2, this);
 			}
 			if(p1Attack != null) {
 				p1Attack.draw(g2, this);
 			}
-			
+
 			dollHouseGround.draw(g2, this); // DO NOT MOVE THIS
 
 			// health bar + background
@@ -270,7 +295,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			g2.setColor(Color.RED);
 			g2.fillRect(100, 675,(int)katze.getHealth()*3,50);
 			g2.fillRect(900, 675,(int)skinWalker.getHealth()*3,50);
-		
+
 			// unfinished! 
 			//katzeProfile = new Item(1200, 750, "sprite/skinwalker/profile (1).png", 20); // images
 			//katzeProfile.draw(g2, this); 
@@ -281,7 +306,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 
 
 		// win/loss
-		
+
 		// skinwalker
 		if(skinWalker.isDead) {
 			victoryKatze.draw(this, g2);
@@ -314,10 +339,19 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		if(State == STATE.MENU) {
 			g2.setColor(Color.BLACK);
 
-			menuBackground.draw(this,g);
+			menuBackground.draw(this, g); 
 			playButton.draw(g2, this);
+
 		}
 
+		if(State == STATE.CHARACTERSELECT) {
+			characterSelectBackground.draw(this, g);
+			vsButton.draw(g2, this);
+			rightStat.draw(g2, this);
+			leftStat.draw(g2, this);
+
+
+		}
 		// GAME PAUSED 
 		if (State == STATE.PAUSE) {
 			restartButton = new Item(520, 520, "background/restartButton.png", 10);
@@ -334,7 +368,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			restartButton.draw(g2, this);
 			quitButton.draw(g2, this);
 		}
-		
+
 
 		// Control Menu, includes CONTROLSMAIN + CONTROLSKINWALKER + CONTROLKATZE
 		if (State == STATE.CONTROLSMAIN) {
@@ -342,7 +376,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				menuBackground.draw(this,g);
 				playButton.draw(g2, this);
 			}
-			
+
 			controlsBackground.draw(this, g);
 			katzeSelect.draw(g2, this);
 			skinWalkerSelect.draw(g2, this);
@@ -355,7 +389,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				menuBackground.draw(this,g);
 				playButton.draw(g2, this);
 			}
-			
+
 			controlsBackground.draw(this, g);
 			controlSkinWalker.draw(this, g);
 			skinWalkerSelected.draw(g2, this);
@@ -369,13 +403,15 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				menuBackground.draw(this,g);
 				playButton.draw(g2, this);
 			}
-			
+
 			controlsBackground.draw(this, g);
 			controlKatze.draw(this, g);
 			katzeSelected.draw(g2, this);
 			skinWalkerSelect.draw(g2, this);
 			backButton.draw(g2, this);
 		}
+		g2.setColor(Color.BLACK);
+		g2.drawString("v.1.1.0 alpha",10,750);
 	}
 
 	// method:clock
@@ -384,7 +420,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		// You can move any of your objects by calling their move methods.
 		skinWalker.move(this);
 		katze.move(this);
-		
+
 		// damage conditions + graphics
 		if(!p1Block) {
 			if(p2Attack!=null&&skinWalker.collision(p2Attack)) {
@@ -533,6 +569,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			State = STATE.CONTROLSMAIN;
 			backChoice = 2;
 		}
+
 		if(!skinWalker.isDead&&!katze.isDead) {
 			if (State == STATE.GAME) {
 
@@ -612,51 +649,76 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				}
 
 
+				// name = new Sprite(x value, y value, health, speed, attack);
+
 				// switching characters 
-				else if(e.getKeyCode()==KeyEvent.VK_1) {
-					katze = new Sprite("sprite/katze/", -80,368,50,2,3);
-				}
-				else if(e.getKeyCode()==KeyEvent.VK_2) {
-					katze = new Sprite("sprite/katze/", -80,368,150,.5,2);
-				}
-				else if(e.getKeyCode()==KeyEvent.VK_3) {
-					katze = new Sprite("sprite/katze/", -80,368,100,1,2);
-				}
-				else if(e.getKeyCode()==KeyEvent.VK_8) {
-					skinWalker = new Sprite("sprite/skinwalker/", 1000,368,50,2,3);
-					skinWalker.x_direction = -1;
-				}
-				else if(e.getKeyCode()==KeyEvent.VK_9) {
-					skinWalker = new Sprite("sprite/skinwalker/", 1000,368,150,.5,2);
-					skinWalker.x_direction = -1;
-				}
-				else if(e.getKeyCode()==KeyEvent.VK_0) {
-					skinWalker = new Sprite("sprite/skinwalker/", 1000,368,100,1,2);
-					skinWalker.x_direction = -1;
-				}
+			}
+		}
+
+		if (State == STATE.CHARACTERSELECT) {
+			// katze
+			if(e.getKeyCode()==KeyEvent.VK_1) { // speedy
+				System.out.println("Katze Speedy Clicked");
+				this.katze = new Sprite("sprite/katze/", -80,368,50,2,3);
+				leftStat = new Item (90, 552, "buttons/speedyLeft.png", 2);
+				playSound("src/sounds/click.wav");
+				
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_2) { // normal
+				this.katze = new Sprite("sprite/katze/", -80,368,100,1,2);
+				leftStat = new Item (90, 552, "buttons/normalLeft.png", 2);
+				playSound("src/sounds/click.wav");
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_3) { // tank
+				this.katze = new Sprite("sprite/katze/", -80,368,150,.5,2);
+				leftStat = new Item (90, 552, "buttons/tankLeft.png", 2);
+				playSound("src/sounds/click.wav");
 			}
 
+			// skinwalker 
 
-			// allows the toggle on and off of game pause 
-			if (State == STATE.GAME || State == STATE.PAUSE) {
-				if (e.getKeyCode()==KeyEvent.VK_ESCAPE) {
-					pauseCounter*=-1;
-					if (pauseCounter == 1) {
-						State = STATE.PAUSE;
-						player.close();
-						// player = new playMusic("src/sounds/ambient.wav"); 
-						// player.run();
-					}
-					else if (pauseCounter == -1) {
-						State = STATE.GAME;
-						player.close();
-						player = new playMusic("src/sounds/loop.wav"); 
-						player.run();
-					}
+			else if(e.getKeyCode()==KeyEvent.VK_8) { // speedy
+				this.skinWalker = new Sprite("sprite/skinwalker/", 1000,368,50,2,3);
+				rightStat = new Item (860, 552, "buttons/speedyRight.png", 2);
+				skinWalker.x_direction = -1;
+				playSound("src/sounds/click.wav");
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_9) {  // normal
+				this.skinWalker = new Sprite("sprite/skinwalker/", 1000,368,100,1,2);
+				rightStat = new Item (860, 552, "buttons/normalRight.png", 2);
+				skinWalker.x_direction = -1;
+				playSound("src/sounds/click.wav");
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_0) { // tank
+				this.skinWalker = new Sprite("sprite/skinwalker/", 1000,368,150,.5,2);
+				rightStat = new Item (860, 552, "buttons/tankRight.png", 2);
+				skinWalker.x_direction = -1;
+				playSound("src/sounds/click.wav");
+			}
+		}
+
+
+
+		// allows the toggle on and off of game pause 
+		if (State == STATE.GAME || State == STATE.PAUSE) {
+			if (e.getKeyCode()==KeyEvent.VK_ESCAPE) {
+				pauseCounter*=-1;
+				if (pauseCounter == 1) {
+					State = STATE.PAUSE;
+					player.close();
+					// player = new playMusic("src/sounds/ambient.wav"); 
+					// player.run();
+				}
+				else if (pauseCounter == -1) {
+					State = STATE.GAME;
+					player.close();
+					player = new playMusic("src/sounds/loop.wav"); 
+					player.run();
 				}
 			}
 		}
 	}
+
 
 	// method: keyTyped()
 	@Override
@@ -692,10 +754,20 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			if(playButton.containsPoint(e.getX(),e.getY())) {
 				System.out.println("Play Button Clicked");
 				playSound("src/sounds/click.wav");
+				State = STATE.CHARACTERSELECT;
+
+			}
+		}
+
+		if (State == STATE.CHARACTERSELECT) {
+			if(vsButton.containsPoint(e.getX(), e.getY())) {
+				System.out.println("VS BUTTON CLICKED");
+				playSound("src/sounds/click.wav");
 				player.close();
 				State = STATE.GAME;
 				player = new playMusic("src/sounds/loop.wav"); 
 				player.run();
+
 			}
 		}
 
@@ -744,6 +816,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				State = State.MENU;
 			}
 		}
+
 
 		if (State == STATE.CONTROLSMAIN || State == STATE.CONTROLSKINWALKER || State == STATE.CONTROLKATZE) {
 			if (skinWalkerSelect.containsPoint(e.getX(), e.getY())) {
