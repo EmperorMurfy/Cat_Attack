@@ -1,6 +1,6 @@
 // Class: GraphicsPanel
 // Written by: Cat Attack Developers
-// Last Updated: Apr 5, 2024
+// Last Updated: May 29, 2024
 // Description: Main class 
 
 import java.awt.Color;
@@ -136,7 +136,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 
 	public GraphicsPanel(){
 
-		// characterSelect menu
+		// characterSelect menu - experimental
 		characterSelectBackground = new Background("background/characterSelectBackground.png", 2);
 		vsButton = new Item (480, 200, "background/vsButton.png", 2);
 		rightStat = new Item (860, 552, "buttons/normalRight.png", 2);
