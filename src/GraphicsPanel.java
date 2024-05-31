@@ -1,6 +1,6 @@
 // Class: GraphicsPanel
 // Written by: Cat Attack Developers
-// Last Updated: May 29, 2024
+// Last Updated: May 29, 2024 
 // Description: Main class 
 
 import java.awt.Color;
@@ -27,10 +27,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+// conflicting variable names
+// p1 - skinWalker
+// p2 - katze
+
 // game bug: doesn't accept inputs after victory screen? 
 public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 
 	private Timer timer;					// The timer is used to move objects at a consistent time interval.
+	private int mute = 1;  
 
 	// game background 
 	private Background dollHouse; // dollHouse background object
@@ -98,7 +103,11 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	private int blockCount2=0;
 
 	private int wait1=0;
-	private int wait2=0;;
+	private int wait2=500;
+
+	private Item hpP1;
+	private Item hpP2;
+
 
 	// combo system
 	private ArrayList<Character> p1Combo = new ArrayList<>();
@@ -136,7 +145,10 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 
 	public GraphicsPanel(){
 
-		// characterSelect menu - experimental
+		hpP1 = new Item (16, 650, "buttons/healthBarLeft.png", 2);
+		hpP2 = new Item (826, 650, "buttons/healthBarRight.png", 2);
+
+		// characterSelect menu
 		characterSelectBackground = new Background("background/characterSelectBackground.png", 2);
 		vsButton = new Item (480, 200, "background/vsButton.png", 2);
 		rightStat = new Item (860, 552, "buttons/normalRight.png", 2);
@@ -231,19 +243,66 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		// background floor - DO NOT CHANGE THE ORDER OF THIS CODE
 		dollHouseGround.draw(g2, this);
 
-		// health bar + background
+
+
+
+		// katze health bar
 		g2.setColor(Color.BLACK);
-		g2.fillRect(100, 675, 300,50); // currently fixed length at 300, default character
-		g2.fillRect(900, 675, 300,50); // to be updated based on unique hp of each character? 
-		// Could fix this bug with an actual image as health BAR with indicators of each character HP level
-		// idea: draw a custom health bar instead of a black bar. 
-		// OR, put a transparent backed, lined bar, thick enough to cover the red as a border
-		// then put a black background behind the red. 
+		g2.fillRect(100, 675, 300,45); 
+
+		if (katze.getHealth() <= 100) {
+			g2.setColor(Color.RED);
+			g2.fillRect(100, 675,(int)katze.getHealth()*3,45);
+		} else {
+			g2.setColor(Color.ORANGE);
+			g2.fillRect(250, 675, 150, 45);  // 148 -> 2 that two will minus 50 
+			g2.setColor(Color.RED);
+			g2.fillRect(100, 675, 300-(((int)katze.getHealth()-100)*3),45);  
+		} 
 
 		g2.setColor(Color.RED);
-		g2.fillRect(100, 675,(int)katze.getHealth()*3,50);
-		g2.fillRect(900, 675,(int)skinWalker.getHealth()*3,50);
+		g2.fillRect(871, 675, 300,50); // potential improvement written above,
+		
+		if (skinWalker.getHealth() <= 100) {
+			g2.setColor(Color.BLACK);
+			g2.fillRect(871, 675, 300-(int)skinWalker.getHealth()*3,50); // when 100 HP, 100 * 3 = 300. 300 - 300 = 0 
+		}
+		
+		else {
+			g2.setColor(Color.ORANGE);
+			g2.fillRect(871, 675, ((int)skinWalker.getHealth()-100)*3, 50); // when health is 150 HP, minus by 100 , 50. Then *3 - 150, when health is 148, minus 100
+			
+		}
 
+		// shield cool down indicator 
+		if (wait1 > 0) {
+			g2.setColor(Color.BLUE); 
+			g2.fillRect(945, 720, 250,20);
+		}
+		else { 
+			g2.setColor(Color.CYAN);
+			g2.fillRect(945, 720, 250,20);
+		}
+		g2.setColor(Color.BLACK);
+		g2.fillRect(75, 720,250,15);
+
+		g2.fillRect(945, 720,(int)wait1/2,20);
+
+		if (wait2 < 500) {
+			g2.setColor(Color.BLUE);
+			g2.fillRect(75, 720,(int)wait2/2,15);
+		}
+
+		else {
+			g2.setColor(Color.CYAN);
+			g2.fillRect(75, 720,250,15);
+		}
+
+
+
+
+		hpP1.draw(g2, this);
+		hpP2.draw(g2, this);
 		// victory condition + graphics
 		if(skinWalker.isDead) {
 			victoryKatze.draw(this, g2);
@@ -269,9 +328,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			victoryTimer++;
 		}
 
-
-
-
 		// GAME
 		if(State == STATE.GAME) {
 			dollHouse.draw(this, g);
@@ -287,14 +343,73 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 
 			dollHouseGround.draw(g2, this); // DO NOT MOVE THIS
 
-			// health bar + background
+			// health bar 
+					
+			
+			// katze health bar
 			g2.setColor(Color.BLACK);
-			g2.fillRect(100, 675, 300,50); 
-			g2.fillRect(900, 675, 300,50); // potential improvement written above,
-			// temporarily addressed with black bar behind red as described
+			g2.fillRect(100, 675, 300,45); 
+
+			if (katze.getHealth() <= 100) {
+				g2.setColor(Color.RED);
+				g2.fillRect(100, 675,(int)katze.getHealth()*3,45);
+			} else {
+				g2.setColor(Color.ORANGE);
+				g2.fillRect(250, 675, 150, 45);  // 148 -> 2 that two will minus 50 
+				g2.setColor(Color.RED);
+				g2.fillRect(100, 675, 300-(((int)katze.getHealth()-100)*3),45);  
+			} 
+
 			g2.setColor(Color.RED);
-			g2.fillRect(100, 675,(int)katze.getHealth()*3,50);
-			g2.fillRect(900, 675,(int)skinWalker.getHealth()*3,50);
+			g2.fillRect(871, 675, 300,50); // potential improvement written above,
+			
+			if (skinWalker.getHealth() <= 100) {
+				g2.setColor(Color.BLACK);
+				g2.fillRect(871, 675, 300-(int)skinWalker.getHealth()*3,50); // when 100 HP, 100 * 3 = 300. 300 - 300 = 0 
+			}
+			
+			else {
+				g2.setColor(Color.ORANGE);
+				g2.fillRect(871, 675, ((int)skinWalker.getHealth()-100)*3, 50); // when health is 150 HP, minus by 100 , 50. Then *3 - 150, when health is 148, minus 100
+				
+			}
+			
+			
+
+			// shield cool down indicator 
+
+			// wait 1 - skinWalker
+			if (wait1 > 0) {
+				g2.setColor(Color.BLUE); 
+				g2.fillRect(945, 720, 250,20);
+			}
+
+			else { 
+				g2.setColor(Color.CYAN);
+				g2.fillRect(945, 720, 250,20);
+			}
+			g2.setColor(Color.BLACK);
+			g2.fillRect(75, 720,250,15);
+
+			g2.fillRect(945, 720,(int)wait1/2,20);
+
+			// katze
+			if (wait2 < 500) {
+				g2.setColor(Color.BLUE);
+				g2.fillRect(75, 720,(int)wait2/2,15);
+			}
+
+			else {
+				g2.setColor(Color.CYAN);
+				g2.fillRect(75, 720,250,15);
+			}
+
+
+
+
+			hpP1.draw(g2, this);
+			hpP2.draw(g2, this);
+
 
 			// unfinished! 
 			//katzeProfile = new Item(1200, 750, "sprite/skinwalker/profile (1).png", 20); // images
@@ -305,7 +420,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		}	
 
 
-		// win/loss
+		// win/loss conditions 
 
 		// skinwalker
 		if(skinWalker.isDead) {
@@ -412,6 +527,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		}
 		g2.setColor(Color.BLACK);
 		g2.drawString("v.1.1.0 alpha",10,750);
+		//g2.drawString("*press m to mute in-game music*",1050,750);
 	}
 
 	// method:clock
@@ -531,32 +647,34 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			wait1--;
 		}
 
-		if(wait2!=0) {
-			wait2--;
+		if(wait2!=500) {
+			wait2++;
 		}
 
 
 		// shield <-> block 
 		if(p1Block) {
+			wait1=500; // 500 until you can use it again
+
 			blockCount1++;
 			if(blockCount1==300) {
 				p1Block=false;
 				if (skinWalker.shieldCounter == 1) {
 					skinWalker.shield();
 				}
-				wait1=500;
 				blockCount1=0;
 			}
 		}
 
 		if(p2Block) {
+			wait2=0;
 			blockCount2++;
 			if(blockCount2==300) {
 				p2Block=false;
 				if (katze.shieldCounter == 1) {
 					katze.shield();
 				}
-				wait2=500;
+
 				blockCount2=0;
 			}
 		}
@@ -565,6 +683,21 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	// method: keyPressed()
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_M) { // mute in game music 
+			if (mute == 1) {
+				player.setVolume(-80);
+				System.out.println("muted");
+
+			}
+
+			if (mute == -1) {
+				player.setVolume(0);
+				System.out.println("unmuted");
+
+			}
+			mute *= -1;
+
+		}
 		if (State == STATE.MENU && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			State = STATE.CONTROLSMAIN;
 			backChoice = 2;
@@ -641,7 +774,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 					playSound("src/sounds/katzePunch.wav");
 				}
 
-				else if(e.getKeyCode()==KeyEvent.VK_Q&&wait2==0&&p2Block==false) {
+				else if(e.getKeyCode()==KeyEvent.VK_Q&&wait2==500&&p2Block==false) {
 					p2Block=true;
 					katze.shield(); 
 					playSound("src/sounds/shield.wav");
@@ -662,7 +795,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				this.katze = new Sprite("sprite/katze/", -80,368,50,2,3);
 				leftStat = new Item (90, 552, "buttons/speedyLeft.png", 2);
 				playSound("src/sounds/click.wav");
-				
+
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_2) { // normal
 				this.katze = new Sprite("sprite/katze/", -80,368,100,1,2);
@@ -806,10 +939,14 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				player.run();
 
 				// reset character to default
-				skinWalker = new Sprite("sprite/skinwalker/", 1000, 368,100,1,1);
-				skinWalker.x_direction = -1;// name = new Sprite(x value, y value, health, speed, attack);
-				katze = new Sprite("sprite/katze/", 50,368,100,1,1);
+				this.skinWalker = new Sprite("sprite/skinwalker/", 1000, 368,100,1,1);
+				this.skinWalker.x_direction = -1;// name = new Sprite(x value, y value, health, speed, attack);
+				this.katze = new Sprite("sprite/katze/", 50,368,100,1,1);
 				victoryTimer = 0;
+				
+				this.rightStat = new Item (860, 552, "buttons/normalRight.png", 2);
+				this.leftStat = new Item (90, 552, "buttons/normalLeft.png", 2);
+
 
 
 
@@ -853,9 +990,11 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			Clip clip = AudioSystem.getClip();
 
 			AudioInputStream ais = AudioSystem.getAudioInputStream(url);
+
 			clip.open(ais);
 			clip.start();
 		}
+
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
