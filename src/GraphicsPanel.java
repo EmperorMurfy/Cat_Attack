@@ -101,12 +101,16 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 	// fireball
 	private Item p1Fire;
 	private Item p2Fire;
+	private int p1Hit = 0;
+	private int p2Hit = 0;
 	private int fire1Count = 0;   // skinWalker 
 	private int fire2Count = 0; // katze
+
 
 	// fireball shooting bug fix
 	private boolean faceRight2 = true;
 	private boolean faceRight1 = false;
+
 
 	// damage works via intersection, when a object with another, it'll detect if shield is up, if up null, if down damage taken by minus health from original
 	// 
@@ -422,8 +426,63 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		if(fireWait2!=0) {
 			fireWait2--;
 		}
+
+
+		if(p1Fire!=null) {
+			if(!faceRight1) {
+				p1Fire.x_coordinate -= 10;
+				//p1Fire = null;
+			}
+			else {
+				p1Fire.x_coordinate +=10;
+			}
+
+			if(p1Fire.x_coordinate < -200|| p1Fire.x_coordinate > 1200) {
+				p1Fire = null;
+				p1Hit = 0;
+			}
+			fireWait1 = 500;
+		}
+
+
+		if(p2Fire!=null) {
+			if(faceRight2 ) {
+				p2Fire.x_coordinate += 10;
+				//p2Fire = null;
+			}
+			else {
+				p2Fire.x_coordinate -=10;
+			}
+
+
+
+			if(p2Fire.x_coordinate < -200|| p2Fire.x_coordinate > 1200) {
+				p2Fire = null;
+				p2Hit = 0;
+			}
+			fireWait2 = 500;
+		}
+
+		if(!p1Block && p2Fire != null && skinWalker.collision(p2Fire)) {
+			if (p2Hit < 30) {
+				skinWalker.setHealth(skinWalker.getHealth()-1);
+				System.out.println("p2 sent fireball");
+				p2Hit++;
+			}
+		}
+
+		if(!p2Block && p1Fire != null && katze.collision(p1Fire)) {
+			if (p1Hit < 30) {
+				katze.setHealth(katze.getHealth()-1);
+				System.out.println("p1 sent fireball");
+				p1Hit++;
+			}
+		}
+
+
 		if(!p1Block) {
-			if((p2Attack!=null&&skinWalker.collision(p2Attack))||(p2Fire!= null && skinWalker.collision(p2Fire))) {
+			if((p2Attack!=null&&skinWalker.collision(p2Attack))) { // ||(p2Fire!= null && skinWalker.collision(p2Fire))) 
+
 				if(p2Combo.size()>=4) {
 					for(int i =p2Combo.size()-4;i<p2Combo.size();i++) {
 						player2Combo += p2Combo.get(i);
@@ -451,6 +510,8 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 						play2ComboP =false;
 					}
 				}
+
+
 				player2Combo="";
 				if(play2ComboP) {
 					skinWalker.setHealth(skinWalker.getHealth()-katze.damage);
@@ -460,27 +521,12 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 			}
 
 
-			if(p2Fire!=null) {
-				if(faceRight2 ) {
-					p2Fire.x_coordinate += 10;
-					//p2Fire = null;
-				}
-				else {
-					p2Fire.x_coordinate -=10;
-				}
-
-
-
-				if(p2Fire.x_coordinate < -200|| p2Fire.x_coordinate > 1200) {
-					p2Fire = null;
-				}
-				fireWait2 = 500;
-			}
 
 		}
 
+
 		if(!p2Block) {
-			if((p1Attack!=null&&katze.collision(p1Attack))||(p1Fire!= null && katze.collision(p1Fire))) {
+			if((p1Attack!=null&&katze.collision(p1Attack))) {
 				if(p1Combo.size()>=4) {
 					for(int i =p1Combo.size()-4;i<p1Combo.size();i++) {
 						player1Combo += p1Combo.get(i);
@@ -517,22 +563,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				}
 			}
 
-
-			if(p1Fire!=null) {
-				if(!faceRight1) {
-					p1Fire.x_coordinate -= 10;
-					//p1Fire = null;
-				}
-				else {
-					p1Fire.x_coordinate +=10;
-				}
-
-				if(p1Fire.x_coordinate < -200|| p1Fire.x_coordinate > 1200) {
-					p1Fire = null;
-				}
-				fireWait1 = 500;
-			}
-
 		}
 
 		// death conditions - checks health to determine death 
@@ -567,7 +597,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 		}
 		//fire conditions
 
-	
+
 
 		if(wait1!=0) {
 			wait1--;
@@ -597,17 +627,17 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				}
 				if(p1Block && skinWalker.collision(p2Fire)) {
 					skinWalker.shield();
-				p2Fire = null;
+					p2Fire = null;
 				}
 				wait1=500;
 				blockCount1=0;
-				}
-				}
-		
-		
-			
-		
-		
+			}
+		}
+
+
+
+
+
 
 		if(p2Block) {
 			blockCount2++;
@@ -623,16 +653,16 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 				}
 				wait2=500;
 				blockCount2=0;
-				}
 			}
-		
-		
-		 
+		}
+
+
+
 	}
-		
-		
-	
-	
+
+
+
+
 
 	// method: keyPressed()
 	@Override
@@ -681,9 +711,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 						p1Fire = new Item(skinWalker.x_coordinate+200, skinWalker.y_coordinate, "images/objects/fireball!.png", 1); // images
 					}
 					Square s = new Square();
-					skinWalker.fire(); 
-					p1Combo.add('f');
-					play1ComboP =true;
+					skinWalker.fire(); 				
 					playSound("src/sounds/LASER1.wav");
 				}
 
@@ -737,8 +765,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener{
 						p2Fire = new Item(katze.x_coordinate+200, katze.y_coordinate, "images/objects/fireball!.png", 1); // images
 					}
 					katze.fire(); 
-					p2Combo.add('f');
-					play2ComboP =true;
 					playSound("src/sounds/LASER1.wav");
 				}
 
