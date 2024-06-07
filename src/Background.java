@@ -1,10 +1,7 @@
-
-
-// Class: Background
-// Written by: Cat-Hadouken Developers
-// Modified Date: 3/10/2024
-// a class called by Graphic Panel in order to paint the background
-
+// Class: Background 
+// Written by: Cat Attack Developer
+// Date: Apr 5, 2024
+// Description: implementation of background class
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -19,11 +16,11 @@ public class Background {
 
 	private String map;
 	
-	public Background(String map) {
+	public Background(String map, int scale) {
 		ClassLoader cldr = this.getClass().getClassLoader();	// These five lines of code load the background picture.
 		String imagePath =  map;	// Change this line if you want to use a different 
 		URL imageURL = cldr.getResource(imagePath);				// background image.  The image should be saved in the
-		scale = 2;
+		this.scale = scale;
 		
 		image = new ImageIcon(imageURL);
 		
@@ -35,7 +32,7 @@ public class Background {
 	}
 	
 	public Background() {
-		this("background/dollHouse.jpg");
+		this("background/dollHouse.jpg", 2);
 	}
 	
 	public void draw(Component c, Graphics g) {
