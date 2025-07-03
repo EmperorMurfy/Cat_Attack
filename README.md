@@ -1,13 +1,14 @@
 # Cat Attack!
-Cat Attack is a 1v1, two player fighting game in which players duel in a 2D environment. 
+Cat Attack is a 1v1, two player fighting game in which players duel in a 2D environment.
 
-Written completely in Java, **Cat Attack!** is a game still under development. Build as apart of the AP Computer Science Game Collaboration Project, this game was an original idea proposed by group members highly inspired by Street Fighter. 
-As it is still in the works, the game may be rough around the edges, with any branch other than main not guaranteed to be functional. 
+Written completely in Java, **Cat Attack!** is a game developed in 2024. Build as apart of the AP Computer Science Game Collaboration Project, this game was an original idea proposed by group members highly inspired by Street Fighter. 
+The game may be rough around the edges, with any branch other than main not guaranteed to be functional. 
 
 In addition, [Working Function](https://github.com/EmperorMurfy/Cat_Attack/tree/main?tab=readme-ov-file#-working-features) + [Future Proposed Functions](https://github.com/EmperorMurfy/Cat_Attack/tree/main?tab=readme-ov-file#-working-features) may be out of date, please check the latest release for more up to date info. 
 
 Note: Main is the main release repository, should be the most stable version - suggested to use the files from release for most stable. 
 Please check the latest release for work in progress/buggy functions
+## We've released the game on [Itch.io!](https://emperormurfy.itch.io/cat-attack)
 
 ## ⚙️ Technical Info
 Developed & Tested on Macbook M1 Air 
